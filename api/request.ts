@@ -1,8 +1,8 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
-import { BASEURL } from "src/config/dev";
 import { Platform } from "react-native";
 import { useAuthStore } from "src/store/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Client_BASEURL } from "p138-common/config/dev";
 // Token 管理工具
 // export const TokenManager = {
 //   async getToken(): Promise<string | null> {
@@ -54,7 +54,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // 配置 Axios 实例
 const axiosInstance = axios.create({
-  baseURL: BASEURL,
+  baseURL: Client_BASEURL,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",

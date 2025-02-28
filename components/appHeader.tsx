@@ -51,7 +51,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       </View>
 
       {/* 标题 */}
-      <View className="flex-row items-center justify-center">
+      <View className="flex-row items-center justify-center flex-1">
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
@@ -65,7 +65,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       </View>
 
       {/* 右侧组件 */}
-      <View className='flex-1 items-end'>
+      <View className='items-end'>
         {rightComponent || <View className='w-5' />}
         {/* 保持对称占位 */}
       </View>

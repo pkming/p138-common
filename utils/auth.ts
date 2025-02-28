@@ -50,7 +50,7 @@ export const loadUserData = async (
         // );
         // console.log('Token refreshed, new token:', newToken);
 
-        const useBaseInfo = await getUserBasicInfoApi(
+        const userBaseInfo = await getUserBasicInfoApi(
           {userID},
           {
             'X-Shop-Code': shopCode || 0 ,
@@ -60,16 +60,16 @@ export const loadUserData = async (
         );
         return {
           loggedIn: true,
-          useBaseInfo: useBaseInfo.data,
+          userBaseInfo: userBaseInfo.data,
           // token: newToken.data,
         };
       } catch (refreshError) {
         console.log('Token refresh failed:', refreshError);
-        return {loggedIn: false, useBaseInfo: undefined, token: undefined};
+        return {loggedIn: false, userBaseInfo: undefined, token: undefined};
       }
     }
     console.log('Other error occurred:', error);
-    return {loggedIn: true, useBaseInfo: undefined, token: undefined};
+    return {loggedIn: true, userBaseInfo: undefined, token: undefined};
   }
 };
 

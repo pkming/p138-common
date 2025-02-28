@@ -1,14 +1,16 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   StyleProp,
-} from 'react-native';
-import {useNavigation} from '@react-navigation/native'; // 引入 useNavigation
-import {ViewStyle} from 'react-native';
-import { Image } from 'react-native';
+  Image,
+} from "react-native";
+
+import { ViewStyle } from "react-native";
+import { appHeaderBlueColor } from "p138-common/utils/styles/color";
+import { useRouter } from "expo-router";
 interface AppHeaderProps {
   title: string; // 标题文字
   onBackPress?: () => void; // 返回按钮点击事件
@@ -28,9 +30,17 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   style,
   titleDesOnPress,
 }) => {
-  const navigation = useNavigation(); // 获取 navigation 对象
+  const router = useRouter();
   const defaultBackPress = () => {
-    onBackPress ? onBackPress() : navigation.goBack();
+    if (!onBackPress) {
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace("/Home");
+      }
+    } else {
+      onBackPress();
+    }
   };
   return (
     <View style={[styles.container, style]}>
@@ -41,23 +51,24 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         ) : (
           <TouchableOpacity
             onPress={defaultBackPress}
-            style={styles.backButton}>
+            style={styles.backButton}
+          >
             <Image
               style={styles.backImg}
-              source={require('src/asset/jpimgs/home/icon_back_arrow.png')}
+              source={require("src/asset/imgs/icon_back_arrow.png")}
             />
           </TouchableOpacity>
         )}
       </View>
 
       {/* 标题 */}
-      <View className="flex-row items-center justify-center flex-1">
+      <View className="flex-row items-center justify-center">
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
         {titleDes && (
-          <TouchableOpacity className='bg-white rounded-2px p-1' onPress={titleDesOnPress}>
-            <Text className='text-white text-sm' numberOfLines={1}>
+          <TouchableOpacity style={styles.helpRoot} onPress={titleDesOnPress}>
+            <Text style={styles.helpText} numberOfLines={1}>
               {titleDes}
             </Text>
           </TouchableOpacity>
@@ -65,8 +76,8 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       </View>
 
       {/* 右侧组件 */}
-      <View className='items-end'>
-        {rightComponent || <View className='w-5' />}
+      <View style={styles.right}>
+        {rightComponent || <View style={styles.placeHodleWidth} />}
         {/* 保持对称占位 */}
       </View>
     </View>
@@ -74,10 +85,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 };
 const styles = StyleSheet.create({
   container: {
-    height: 40,
+    height: 50,
     backgroundColor: '#f44336',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 10,
   },
   helpRoot: {
@@ -85,19 +96,19 @@ const styles = StyleSheet.create({
     marginLeft: 2,
     paddingVertical: 1,
     paddingHorizontal: 4,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   helpText: {
     fontSize: 10,
-    color: '#f44336',
+    color: "#f44336",
   },
   left: {
     flex: 1,
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
   },
   right: {
     flex: 1,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
   },
   backButton: {
     padding: 5,
@@ -107,17 +118,19 @@ const styles = StyleSheet.create({
     height: 23,
   },
   centerRoot: {
-    flexDirection: 'row',
+    flexDirection: "row",
     width: 150,
   },
   title: {
     // flex: 1, // 占据中间空间
     fontSize: 20,
-    color: '#fff',
-    fontWeight: 'bold',
-    textAlign: 'center', // 确保文字居中
+    color: "#fff",
+    fontWeight: "bold",
+    textAlign: "center", // 确保文字居中
   },
-
+  placeHodleWidth: {
+    width: 20,
+  },
 });
 
 export default AppHeader;

@@ -1,4 +1,5 @@
-import React from 'react';
+import { ICON_SIZES } from "p138-common/utils/styles/theme";
+import React from "react";
 import {
   View,
   TextInput,
@@ -9,9 +10,9 @@ import {
   StyleProp,
   TextStyle,
   ViewStyle,
-} from 'react-native';
-import Eye from 'src/asset/svg/eye.svg';
-import EyeClose from 'src/asset/svg/eye-close.svg';
+  Platform,
+  Image,
+} from "react-native";
 
 // 定义 Props 类型
 interface CustomTextInputProps extends TextInputProps {
@@ -23,7 +24,8 @@ interface CustomTextInputProps extends TextInputProps {
   textStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
 }
-
+const hideEye = require("src/asset/jpImages/login/icon_login_hideye.png");
+const showEye = require("src/asset/jpImages/login/icon_login_eye.png");
 const ZTextInput: React.FC<CustomTextInputProps> = ({
   label,
   error,
@@ -42,28 +44,32 @@ const ZTextInput: React.FC<CustomTextInputProps> = ({
       {label && <Text style={styles.label}>{label}</Text>}
 
       {/* 输入框及可见图标 */}
-      <View style={styles.inputWrapper}>
+      <View
+        style={[
+          styles.inputWrapper,
+          error && { borderColor: "#f53b57" },
+          styles.input,
+        ]}
+      >
         <TextInput
           style={[
-            styles.input,
-            error && {borderColor: '#f53b57'}, // 如果有错误，则改变边框颜色
+            { flex: 1 },
+            error && { borderColor: "#f53b57" }, // 如果有错误，则改变边框颜色
             textStyle,
           ]}
           value={value}
           onChangeText={onChangeText}
-          placeholderTextColor={'#ccc'}
+          placeholderTextColor={"#ccc"}
           secureTextEntry={isSecure}
           {...props}
         />
-        {secure && (
-          <TouchableOpacity
-            style={styles.iconWrapper}
-            onPress={() => setIsSecure(!isSecure)}>
-            {!isSecure ? (
-              <Eye width={20} height={20} fill={'#666'} />
-            ) : (
-              <EyeClose width={20} height={20} fill={'#666'} />
-            )}
+
+        {secure && Platform.OS !== "web" && (
+          <TouchableOpacity onPress={() => setIsSecure(!isSecure)}>
+            <Image
+              source={isSecure ? hideEye : showEye}
+              style={{ width: ICON_SIZES.medium, height: ICON_SIZES.medium }}
+            />
           </TouchableOpacity>
         )}
       </View>
@@ -80,34 +86,33 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     marginBottom: 5,
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'relative',
+    flexDirection: "row",
+    alignItems: "center",
+    position: "relative",
   },
   input: {
-    flex: 1,
     height: 40,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    color: '#333',
-    backgroundColor: '#f0f0f0',
+    color: "#333",
+    backgroundColor: "#f0f0f0",
   },
   iconWrapper: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   errorText: {
     fontSize: 12,
-    color: '#f53b57',
+    color: "#f53b57",
     marginTop: 5,
   },
 });

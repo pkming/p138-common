@@ -1,5 +1,6 @@
 // 图标大小
 export const ICON_SIZES = {
+    xsmall: 12,
     small: 16,
     medium: 24,
     large: 32,

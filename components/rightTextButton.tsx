@@ -1,4 +1,5 @@
-import React from 'react';
+import { ICON_SIZES } from "p138-common/utils/styles/theme";
+import React from "react";
 import {
   Text,
   TouchableOpacity,
@@ -8,8 +9,7 @@ import {
   TextStyle,
   Image,
   ImageStyle,
-} from 'react-native';
-import commonStyles from 'src/styles';
+} from "react-native";
 
 export type RightTextButtonPorps = {
   onPress?: ((event: GestureResponderEvent) => void) | undefined;
@@ -17,26 +17,25 @@ export type RightTextButtonPorps = {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   imageStyle?: StyleProp<ImageStyle>;
+  className?: string;
 };
 const RightTextButton = (props: RightTextButtonPorps) => {
   return (
     <TouchableOpacity
-      style={[commonStyles.alignCenter, commonStyles.row, props.style]}
+      style={props.style}
+      className={`flex-row items-center justify-center ${props.className}`}
       activeOpacity={1}
-      onPress={props.onPress}>
+      onPress={props.onPress}
+    >
       <Text
-        style={[
-          commonStyles.fontSize14,
-          commonStyles.fontColor333,
-          commonStyles.center,
-          {lineHeight: 16},
-          props.textStyle,
-        ]}>
-        {props.title}{' '}
+        className="font-size-14 text-color-333 center line-height-16"
+        style={[{ lineHeight: 16 }, props.textStyle]}
+      >
+        {props.title}{" "}
       </Text>
       <Image
-        source={require('src/asset/jpimgs/chat/arrow_right_grey.png')}
-        style={[commonStyles.iconSize12,props.imageStyle]}
+        source={require("src/asset/jpimgs/chat/arrow_right_grey.png")}
+        style={[{width:ICON_SIZES.xsmall,height:ICON_SIZES.xsmall}, props.imageStyle]}
         resizeMode="stretch"
       />
     </TouchableOpacity>

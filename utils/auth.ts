@@ -18,7 +18,7 @@ export const loadUserData = async (
   }
 
   try {
-    const useBaseInfo = await getUserBasicInfoApi(
+    const userBaseInfo = await getUserBasicInfoApi(
       {userID},
       {
         'X-Shop-Code':  shopCode || 0,
@@ -34,8 +34,8 @@ export const loadUserData = async (
     //     'X-Username': username,
     //   },
     // );
-    console.log('User info fetched successfully:', useBaseInfo);
-    return {loggedIn: true, useBaseInfo: useBaseInfo.data};
+    console.log('User info fetched successfully:', userBaseInfo);
+    return {loggedIn: true, userBaseInfo: userBaseInfo.data};
   } catch (error: any) {
     if (error.code === 'TOKEN_EXPIRED' && retryCount > 0) {
       console.log('Token expired, retrying...');

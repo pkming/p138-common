@@ -8,11 +8,11 @@ import { loadUserData } from "p138-common/utils/auth";
 interface UserStore {
   loggedIn: boolean;
   userLoginInfo?: ServerCommonAuth.UserSignInResult;
-  useBaseInfo?: ServerCommonUser.User;
+  userBaseInfo?: ServerCommonUser.User;
   shopInfo?: ServerCommonShop.LotteryShop;
   setLoggedIn: (loggedIn: boolean) => void;
   setUserLoginInfo: (userLoginInfo: ServerCommonAuth.UserSignInResult) => void;
-  setUserBaseInfo: (useBaseInfo: ServerCommonUser.User) => void;
+  setUserBaseInfo: (userBaseInfo: ServerCommonUser.User) => void;
   loadUserData: (userLoginInfo: ServerCommonAuth.UserSignInResult) => void;
   resetStore: () => void;
   setShopInfo: (shopInfo: ServerCommonShop.LotteryShop) => void;
@@ -23,7 +23,7 @@ export const useUserStore = create<UserStore>()(
     (set) => ({
       loggedIn: true,
       userLoginInfo: {} as ServerCommonAuth.UserSignInResult,
-      useBaseInfo: undefined,
+      userBaseInfo: undefined,
       token: null,
       shopInfo: undefined,
       setLoggedIn: (loggedIn) => set({ loggedIn }),
@@ -31,17 +31,17 @@ export const useUserStore = create<UserStore>()(
         AsyncStorage.setItem(USER_INFO_KEY, JSON.stringify(userLoginInfo));
         set({ userLoginInfo });
       },
-      setUserBaseInfo: (useBaseInfo) =>
+      setUserBaseInfo: (userBaseInfo) =>
         set({
-          useBaseInfo,
+          userBaseInfo,
         }),
       setShopInfo: (shopInfo) => set({ shopInfo }),
       loadUserData: async (userLoginInfo) => {
-        const { loggedIn, useBaseInfo } = await loadUserData(userLoginInfo);
-        if (useBaseInfo) {
+        const { loggedIn, userBaseInfo } = await loadUserData(userLoginInfo);
+        if (userBaseInfo) {
           set({
             loggedIn,
-            useBaseInfo,
+            userBaseInfo,
           });
         }
       },
@@ -49,7 +49,7 @@ export const useUserStore = create<UserStore>()(
         set({
           loggedIn: false,
           shopInfo: undefined,
-          useBaseInfo: undefined,
+          userBaseInfo: undefined,
         });
         AsyncStorage.removeItem(USER_INFO_KEY);
       },

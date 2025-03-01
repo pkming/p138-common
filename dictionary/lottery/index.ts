@@ -1,3 +1,4 @@
+import { NewSportBallPlay } from "p138-common/types/lottery/bets";
 
 export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
     FootballLottery: '竞彩足球',
@@ -37,3 +38,4 @@ export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
     Winner: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
     WinnerRunnerUp: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
   };
+

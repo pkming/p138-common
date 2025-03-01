@@ -3,10 +3,10 @@ export const H5_Business_URL = 'https://p138-business-ui.shenz.dev';
 export const H5_Client_URL = 'https://p138-client-ui.shenz.dev';
 // export const H5_Business_URL = 'http://192.168.31.44:8080';
 
-export const Business_BASEURL = 'http://192.168.31.249:8889';
-export const Client_BASEURL = 'http://192.168.31.249:8888';
-// export const Business_BASEURL = 'https://p138-business-api.shenz.dev';
-// export const Client_BASEURL = 'https://p138-customer-api.shenz.dev';
+// export const Business_BASEURL = 'http://192.168.31.249:8889';
+// export const Client_BASEURL = 'http://192.168.31.249:8888';
+export const Business_BASEURL = 'https://p138-business-api.shenz.dev';
+export const Client_BASEURL = 'https://p138-customer-api.shenz.dev';
 
 // https://p138-customer-api.shenz.dev
 export const RongCloudAppSecret = 'BZiT0rwTY60f8';

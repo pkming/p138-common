@@ -1,4 +1,3 @@
-import { NewSportBallPlay } from "p138-common/types/lottery/bets";
 
 export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
     FootballLottery: '竞彩足球',

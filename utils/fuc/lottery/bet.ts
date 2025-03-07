@@ -1,4 +1,4 @@
-import { useBetStore } from "p138-common/store/lottery/bet";
+import { useBetInfo } from "p138-common/store/lottery/bet";
 import { parseOddsCellKey } from "./oddsKeyHelper";
 import { BetOption, EveryBetType } from "p138-common/types/lottery/bets";
 
@@ -49,7 +49,7 @@ export function jumentSingle(selectedMatches: Record<string, string[]>) {
     return false;
   } else {
     const matchId = keys[0];
-    const matchInfo = useBetStore.getState().matchData[matchId];
+    const matchInfo = useBetInfo.getState().matchData[matchId];
     const handicapDtosPlayEnglishName = selectedMatches[matchId]?.map(
       key => parseOddsCellKey(key).playEnglishName,
     );

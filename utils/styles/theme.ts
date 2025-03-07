@@ -9,7 +9,9 @@ export const ICON_SIZES = {
   
   // 文字大小
   export const FONT_SIZES = {
+    xsmall: 10,
     small: 12,
+    xmedium: 14,
     medium: 16,
     large: 20,
     xlarge: 24,

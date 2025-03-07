@@ -5,7 +5,7 @@ interface LotteryTypeInfo {
     setLotteryTypeInfo: (appState: ServerCommonLottery.Lottery) => void;
   }
   
-  export const useLotteryTypeInfoStore = create<LotteryTypeInfo>(set => ({
+  export const useLotteryTypeInfo = create<LotteryTypeInfo>(set => ({
     lotteryTypeInfo: undefined,
     setLotteryTypeInfo: lotteryTypeInfo => set({lotteryTypeInfo}),
   }));

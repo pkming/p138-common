@@ -1,4 +1,5 @@
 
+
 export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
     FootballLottery: '竞彩足球',
     BasketballLottery: '竞彩篮球',

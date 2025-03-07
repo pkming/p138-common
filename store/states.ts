@@ -11,7 +11,7 @@ interface AppStateStore {
   setAppState: (appState:AppStateStatus) => void;
 }
 
-export const useAppStateStore = create<AppStateStore>(set => ({
+export const useAppState = create<AppStateStore>(set => ({
   appState: 'active',
   loading:false,
   setAppState: appState => set({appState}),

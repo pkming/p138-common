@@ -9,7 +9,6 @@ import {
 } from "react-native";
 
 import { ViewStyle } from "react-native";
-import { appHeaderBlueColor } from "p138-common/utils/styles/color";
 import { useRouter } from "expo-router";
 interface AppHeaderProps {
   title: string; // 标题文字
@@ -85,11 +84,10 @@ const AppHeader: React.FC<AppHeaderProps> = ({
 };
 const styles = StyleSheet.create({
   container: {
-    height: 50,
     backgroundColor: '#f44336',
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 10,
+    padding: 6,
   },
   helpRoot: {
     borderRadius: 2,
@@ -123,7 +121,7 @@ const styles = StyleSheet.create({
   },
   title: {
     // flex: 1, // 占据中间空间
-    fontSize: 20,
+    fontSize: 18,
     color: "#fff",
     fontWeight: "bold",
     textAlign: "center", // 确保文字居中

@@ -26,7 +26,6 @@ const TabSwitcher = <T extends string | number>({
   onTabPress,
   style,
 }: TabSwitcherProps<T>): React.ReactElement => {
-  console.log(activeTab, "====");
   return (
     <View style={[styles.container, style]}>
       {tabs.map((tab) => (

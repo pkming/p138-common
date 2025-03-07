@@ -12,6 +12,7 @@ export type NewSportBallPlay =
 | '大小分'
 | '胜负差'
 | '上下单双'
+| '胜负/让分'
 | '胜负过关';
 
 export type MatchInfo = LotteryDataSource.MatchInfo & {
@@ -35,7 +36,10 @@ export type BetStore = {
     string, // competitionId
     string[]
   >;
-  /**玩法选项卡  足球 0混合 1胜平负 2猜比分 3总进球 4半全场 5猜一场   篮球 0混合 ，1胜负，2大小分，3胜负差*/
+  /**玩法选项卡  
+   * 足球 0混合 1胜平负 2猜比分 3总进球 4半全场 5猜一场   
+   * 篮球 0混合 ，1胜负，2大小分，3胜负差
+   * 北京单场 0胜平负 1猜比分 2总进球 3半全场 4上下单双 5胜负过关*/
   activeBallPay: number; //玩法选项卡
   /** 倍数*/
   multiplier: number;

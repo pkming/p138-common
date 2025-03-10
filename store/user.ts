@@ -18,7 +18,7 @@ interface UserStore {
   setShopInfo: (shopInfo: ServerCommonShop.LotteryShop) => void;
 }
 
-export const useUserStore = create<UserStore>()(
+export const useUserInfo = create<UserStore>()(
   persist(
     (set) => ({
       loggedIn: true,

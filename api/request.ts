@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { Platform } from "react-native";
-import { useUserStore } from "p138-common/store/user";
+import { useUserInfo } from "p138-common/store/user";
 import { Client_BASEURL } from "p138-common/config/dev";
 // Token 管理工具
 // export const TokenManager = {
@@ -95,7 +95,7 @@ axiosInstance.interceptors.response.use(
     if (!config) {
       return Promise.reject(error); // 如果没有请求配置，直接返回错误
     }
-    // const {setToken} = useUserStore.getState();
+    // const {setToken} = useUserInfo.getState();
 
     const { response } = error;
     console.log("error111", response);
@@ -226,7 +226,7 @@ async function request<
     data,
     headers: header || {},
   };
-  const { setLoggedIn } = useUserStore.getState();
+  const { setLoggedIn } = useUserInfo.getState();
   // 如果需要鉴权
   // if (ignoreAuth) {
   //   const token = await TokenManager.getToken();

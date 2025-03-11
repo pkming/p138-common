@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { Platform } from "react-native";
 import { useUserInfo } from "p138-common/store/user";
-import { Client_BASEURL } from "p138-common/config/dev";
+import { BASEURL } from "app.config";
 // Token 管理工具
 // export const TokenManager = {
 //   async getToken(): Promise<string | null> {
@@ -53,7 +53,7 @@ import { Client_BASEURL } from "p138-common/config/dev";
 
 // 配置 Axios 实例
 const axiosInstance = axios.create({
-  baseURL: Client_BASEURL,
+  baseURL: BASEURL,
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",

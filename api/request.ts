@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 import { Platform } from "react-native";
 import { useUserInfo } from "p138-common/store/user";
-import { BASEURL } from "app.config";
+import { BASEURL } from "p138.config";
 // Token 管理工具
 // export const TokenManager = {
 //   async getToken(): Promise<string | null> {

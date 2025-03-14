@@ -1,4 +1,4 @@
-export const orderTypeMap: Record<CommonCommonEnum.OrderType, string> = {
+export const OrderTypeMap: Record<CommonCommonEnum.OrderType, string> = {
   1: "自购",
   2: "合买",
   3: "代买",

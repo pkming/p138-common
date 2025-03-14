@@ -4,21 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { USER_INFO_KEY } from "p138-common/config/dev";
 import { loadUserData } from "p138-common/utils/auth";
 
-// Zustand 状态管理：用于管理用户认证状态
-interface UserStore {
-  loggedIn: boolean;
-  userLoginInfo?: ServerCommonAuth.UserSignInResult;
-  userBaseInfo?: ServerCommonUser.User;
-  shopInfo?: ServerCommonShop.LotteryShop;
-  setLoggedIn: (loggedIn: boolean) => void;
-  setUserLoginInfo: (userLoginInfo: ServerCommonAuth.UserSignInResult) => void;
-  setUserBaseInfo: (userBaseInfo: ServerCommonUser.User) => void;
-  loadUserData: (userLoginInfo: ServerCommonAuth.UserSignInResult) => void;
-  resetStore: () => void;
-  setShopInfo: (shopInfo: ServerCommonShop.LotteryShop) => void;
-}
-
-export const useUserInfo = create<UserStore>()(
+export const useUserInfo = create<CommonUser.UserStore>()(
   persist(
     (set) => ({
       loggedIn: true,

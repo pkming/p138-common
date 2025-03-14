@@ -1,8 +1,8 @@
-import { BetStore } from 'p138-common/types/lottery/bets';
+
 import {create} from 'zustand';
 
 
-export const useBetInfo = create<BetStore>((set, get) => ({
+export const useBetInfo = create<CommonBet.BetStore>((set, get) => ({
   selectedMatches : {}, // 存储选中的比赛和对应的玩法
   multiplier: 1, // 倍数
   activeBallPay: 0,

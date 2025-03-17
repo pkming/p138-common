@@ -1,8 +1,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { USER_INFO_KEY } from "p138-common/config/dev";
+
 import { loadUserData } from "p138-common/utils/auth";
+import { USER_INFO_KEY } from "src/api/env.config";
 
 /**
  * 用户信息状态管理 hook

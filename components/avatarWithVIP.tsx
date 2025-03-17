@@ -1,4 +1,4 @@
-import { defaultImage } from 'p138-common/config/dev';
+import { defaultImage } from 'src/api/env.config';
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 

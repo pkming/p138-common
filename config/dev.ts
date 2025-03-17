@@ -1,19 +1,23 @@
-// export const BASEURL = 'http://192.168.31.249:8889';
-export const H5_Business_URL = 'https://p138-business-ui.shenz.dev';
-export const H5_Client_URL = 'https://p138-client-ui.shenz.dev';
-// export const H5_Business_URL = 'http://192.168.31.44:8080';
+/**
+ * 配置兼容层
+ * 为了保持向后兼容，重定向到新的配置系统
+ * @deprecated 请使用 import { ... } from 'p138-common/config' 替代
+ */
 
-// export const Business_BASEURL = 'http://192.168.31.249:8889';
-// export const Client_BASEURL = 'http://192.168.31.249:8888';
-export const Business_BASEURL = 'https://p138-business-api.shenz.dev';
-export const Client_BASEURL = 'https://p138-customer-api.shenz.dev';
+import appConfig from './index';
 
-// https://p138-customer-api.shenz.dev
-export const RongCloudAppSecret = 'BZiT0rwTY60f8';
-export const USER_INFO_KEY = 'userInfo';
-export const STORAGE_KEY = 'loginCredentials';
+// 重新导出所有配置项
+export const BASEURL = appConfig.api.customerApi;
+export const Business_BASEURL = appConfig.api.businessApi;
+export const H5_Client_URL = appConfig.api.customerUi;
+export const H5_Business_URL = appConfig.api.businessUi;
+export const USER_INFO_KEY = appConfig.storage.userInfoKey;
+export const STORAGE_KEY = appConfig.storage.loginCredentialsKey;
+export const defaultImage = appConfig.resources.defaultImageUrl;
+export const RongCloudAppSecret = appConfig.resources.rongCloudSecret;
+export const Client_BASEURL = appConfig.api.customerApi;
 
-// export const defaultImage =
-  // 'https://gips3.baidu.com/it/u=3886271102,3123389489&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960';
-  export const defaultImage =
-  'https://luckyaliimg.rxhhsm.com/img/default.png';
+// 在控制台提示废弃警告 (仅在开发环境)
+if (process.env.NODE_ENV !== 'production') {
+  console.warn('[Config] 警告: 直接从p138-common/config/dev导入配置已废弃，请使用p138-common/config代替');
+}

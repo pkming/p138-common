@@ -4,7 +4,7 @@ declare namespace CommonUser {
     /**是否登录*/
     loggedIn: boolean;
     /**用户登录信息*/
-    userLoginInfo?: ServerCommonAuth.UserSignInResult;
+    loginInfo?: ServerCommonAuth.UserSignInResult;
     /**用户基础信息*/
     userBaseInfo?: ServerCommonUser.User;
     /**店铺信息*/
@@ -13,12 +13,10 @@ declare namespace CommonUser {
     setLoggedIn: (loggedIn: boolean) => void;
     /**设置用户登录信息*/
     setUserLoginInfo: (
-      userLoginInfo: ServerCommonAuth.UserSignInResult
+      loginInfo: ServerCommonAuth.UserSignInResult
     ) => void;
     /**设置用户基础信息*/
     setUserBaseInfo: (userBaseInfo: ServerCommonUser.User) => void;
-    /**加载用户数据*/
-    loadUserData: (userLoginInfo: ServerCommonAuth.UserSignInResult) => void;
     /**重置store*/
     resetStore: () => void;
     /**设置店铺信息*/

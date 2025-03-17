@@ -17,7 +17,7 @@ declare namespace CommonLottery {
     /**彩种玩法信息*/
     lotteryTypeInfo?: ServerCommonLottery.Lottery;
     /**设置彩种玩法信息*/
-    setLotteryTypeInfo: (appState: ServerCommonLottery.Lottery) => void;
+    setTypeInfo: (appState: ServerCommonLottery.Lottery) => void;
   }
 
   type NewSportBallPlay =

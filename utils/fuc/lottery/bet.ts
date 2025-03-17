@@ -1,10 +1,7 @@
-import { useBetInfo } from "p138-common/store/lottery/bet";
 import { parseOddsCellKey } from "./oddsKeyHelper";
 import { BetOption, EveryBetType } from "p138-common/types/lottery/bets";
 
-
-
-  /**
+/**
  * 更新 HandicapDtos 的选中状态
  * @param selectedHandicapDtos 当前选中的玩法对象
  * @param handicapDtos 当前的 Handicap 对象
@@ -41,15 +38,17 @@ export function updateHandicapDtos(
   return updatedSelectedHandicapDtos;
 }
 
-
 //计算是否是单关
-export function jumentSingle(selectedMatches: Record<string, string[]>) {
+export function jumentSingle(
+  selectedMatches: Record<string, string[]>,
+  matchData: Record<string, LotteryDataSource.MatchInfo>
+) {
   const keys = Object.keys(selectedMatches);
   if (keys.length !== 1) {
     return false;
   } else {
     const matchId = keys[0];
-    const matchInfo = useBetInfo.getState().matchData[matchId];
+    const matchInfo = matchData[matchId];
     const handicapDtosPlayEnglishName = selectedMatches[matchId]?.map(
       key => parseOddsCellKey(key).playEnglishName,
     );
@@ -65,9 +64,6 @@ export function jumentSingle(selectedMatches: Record<string, string[]>) {
     return notSingle;
   }
 }
-
-
-
 
 export const calculateTotalBets = (
   passTypes: string[],

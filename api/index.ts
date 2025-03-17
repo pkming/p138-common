@@ -138,7 +138,7 @@ export interface RequestProps<
  * API客户端配置
  */
 export interface ApiClientConfig {
-  // 基础URL必须由具体项目提供
+  // 基础URL
   baseURL: string;
   // 超时时间
   timeout?: number;

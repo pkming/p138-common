@@ -4,6 +4,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { USER_INFO_KEY } from "p138-common/config/dev";
 import { loadUserData } from "p138-common/utils/auth";
 
+/**
+ * 用户信息状态管理 hook
+ * 
+ * 用于管理用户的登录状态、基本信息、店铺信息等
+ * 支持持久化存储，刷新后保持登录状态
+ */
 export const useUserInfo = create<CommonUser.UserStore>()(
   persist(
     (set) => ({

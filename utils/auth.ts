@@ -1,6 +1,8 @@
 // src/utils/authUtils.ts
+
+import { getUserBasicInfoApi } from '@/api/interface/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getUserBasicInfoApi } from 'p138-common/api/client/interface/users-auth';
+// import { getUserBasicInfoApi } from 'p138-common/api/client/interface/users-auth';
 
 // import { get } from 'src/api/interface/audit';
 

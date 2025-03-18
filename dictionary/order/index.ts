@@ -22,4 +22,10 @@ export const OrderStatuses: string[] = [
     '出票失败', // 10: Settled
     '已撤单', // 10: Settled
   ];
-  
+  export const winStatusMap: Record<CommonCommonEnum.WinStatus, string> = {
+    1: "未中奖",
+    2: "已中奖",
+    3: "未中奖",
+    4: "未中奖",
+    5: "未中奖",
+  };

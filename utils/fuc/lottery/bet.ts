@@ -1,3 +1,4 @@
+import { useBetStore } from "src/store";
 import { parseOddsCellKey } from "./oddsKeyHelper";
 import { BetOption, EveryBetType } from "p138-common/types/lottery/bets";
 
@@ -41,18 +42,17 @@ export function updateHandicapDtos(
 //计算是否是单关
 export function jumentSingle(
   selectedMatches: Record<string, string[]>,
-  matchData: Record<string, LotteryDataSource.MatchInfo>
 ) {
   const keys = Object.keys(selectedMatches);
   if (keys.length !== 1) {
     return false;
   } else {
     const matchId = keys[0];
-    const matchInfo = matchData[matchId];
+    const matchInfo = useBetStore.getState().matchData[matchId];
     const handicapDtosPlayEnglishName = selectedMatches[matchId]?.map(
       key => parseOddsCellKey(key).playEnglishName,
     );
-
+    console.log(matchInfo,'======11');
     const notSingle = matchInfo.handicapDtos?.find(
       handicapDto =>
         handicapDto.single === '1' &&
@@ -60,7 +60,7 @@ export function jumentSingle(
           name => name === handicapDto.playEnglishName,
         ) > -1,
     );
-    console.log(notSingle);
+    
     return notSingle;
   }
 }

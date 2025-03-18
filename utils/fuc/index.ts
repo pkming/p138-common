@@ -1,7 +1,5 @@
 import dayjs from 'dayjs';
-import {Dimensions} from 'react-native';
 
-const {width, height} = Dimensions.get('window');
 export const debounce = <T extends (...args: any[]) => void>(
   func: T,
   delay: number,

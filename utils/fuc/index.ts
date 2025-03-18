@@ -29,6 +29,9 @@ export const formattedDate = (day: string, format: string = 'YYYY-MM-DD') => {
 export const showToast = (message: string) => {
   globalThis.Toast.show(message);
 };
+const getImageUrl = (url: string) => {
+  return url.replace('http://', 'https://');
+};
 
 export const kScreenWidth = width;
 export const kScreenHeight = height;

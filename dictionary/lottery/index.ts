@@ -19,25 +19,7 @@ export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
     Winner: '冠军',
     WinnerRunnerUp: '冠亚军',
   };
-  // export const LotteryIconMap: Record<CommonCommonEnum.LotteryName, number> = {
-  //   BasketballLottery: require('src/asset/jpimgs/home/icon_game_basletball.png'),
-  //   FootballLottery: require('src/asset/jpimgs/home/icon_game_foot_ball.png'),
-  //   BeijingSingleMatch: require('src/asset/jpimgs/home/icon_game_bj_single.png'),
-  //   WinLossLottery: require('src/asset/jpimgs/home/icon_game_win_lose.png'),
-  //   ChooseNine: require('src/asset/jpimgs/home/icon_game_choose9.png'),
-  //   Happy8: require('src/asset/jpimgs/home/icon_game_happy8.png'),
-  //   DoubleBall: require('src/asset/jpimgs/home/icon_game_double_colors.png'),
-  //   SevenStar: require('src/asset/jpimgs/home/icon_game_7star.png'),
-  //   SuperLotto: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   ArrangedFive: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   ArrangedThree: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   SevenHappy: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   Fucai3D: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   HalfTimeFullTimeBet6: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   GameTotalGoalsBet4: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   Winner: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  //   WinnerRunnerUp: require('src/asset/jpimgs/home/icon_game_big_leto.png'),
-  // };
+  
 
   export const OrderStatusMap: Record<CommonCommonEnum.OrderStatus, string> = {
     1: "保存方案",

@@ -87,7 +87,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f44336',
     flexDirection: "row",
     alignItems: "center",
-    padding: 6,
   },
   helpRoot: {
     borderRadius: 2,

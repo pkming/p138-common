@@ -31,5 +31,3 @@ export const getImageUrl = (url: string) => {
   return url.replace('http://', 'https://');
 };
 
-export const kScreenWidth = width;
-export const kScreenHeight = height;

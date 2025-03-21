@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import CustomModal from "./modal";
 import React from "react";
-import { kScreenWidth } from "p138-common/utils/fuc";
+import { kScreenWidth } from "p138-common/utils/fuc/fc.rn";
 import { FONT_SIZES } from "p138-common/utils/styles/theme";
 
 export interface CustomModalProps<T extends string> {

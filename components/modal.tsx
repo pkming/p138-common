@@ -1,4 +1,4 @@
-import { kScreenWidth } from "p138-common/utils/fuc";
+import { kScreenWidth } from "p138-common/utils/fuc/fc.rn";
 import React, { useState, useEffect } from "react";
 import {
   TouchableOpacity,

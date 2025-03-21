@@ -1,6 +1,6 @@
 import { Image, Text, View } from "react-native";
 import React from "react";
-import { kScreenHeight, kScreenWidth } from "p138-common/utils/fuc";
+import { kScreenHeight, kScreenWidth } from "p138-common/utils/fuc/fc.rn";
 const NO_DATA_IMAGE = require("src/asset/jpImages/no_data.png");
 
 export const NoData = () => (

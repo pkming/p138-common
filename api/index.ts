@@ -282,9 +282,19 @@ export function createApiClient(config: ApiClientConfig) {
         if (onShowToast) {
           onShowToast(errorMessage);
         }
-        return Promise.reject({
-          ...response.data,
-          originalResponse: response
+        // 返回统一的错误格式
+        return Promise.resolve({
+          ...response,
+          data: {
+            success: false,
+            message: errorMessage,
+            error: response.data?.error || {
+              code: -1,
+              message: errorMessage,
+              type: 'BUSINESS_ERROR'
+            },
+            data: null
+          }
         });
       }
     },
@@ -294,11 +304,24 @@ export function createApiClient(config: ApiClientConfig) {
         if (onShowToast) {
           onShowToast('网络连接失败，请检查网络设置');
         }
-        return Promise.reject(error);
+        return Promise.resolve({
+          ...error.response,
+          data: { 
+            success: false, 
+            message: '网络连接失败，请检查网络设置',
+            error: {
+              code: -1,
+              message: '网络连接失败，请检查网络设置',
+              type: 'NETWORK_ERROR'
+            },
+            data: null
+          }
+        });
       }
       
       const { status } = error.response;
       const axiosConfig = error.config as any;
+      let errorMessage = error.response.data?.error?.message || '请求失败';
       
       switch (status) {
         case 400: // 请求错误
@@ -311,6 +334,7 @@ export function createApiClient(config: ApiClientConfig) {
           // 已经尝试过重试的请求不再处理
           if (axiosConfig._retry) {
             await handleLogout();
+            errorMessage = '登录已过期，请重新登录';
             break;
           }
           
@@ -338,48 +362,57 @@ export function createApiClient(config: ApiClientConfig) {
                 return apiClient.request(axiosConfig);
               } else {
                 await handleLogout();
+                errorMessage = '登录已过期，请重新登录';
               }
             } catch (refreshError) {
               console.error('刷新Token失败:', refreshError);
               await handleLogout();
+              errorMessage = '登录已过期，请重新登录';
             }
           } else {
             console.error('没有刷新Token，需要重新登录');
             await handleLogout();
+            errorMessage = '登录已过期，请重新登录';
           }
           break;
           
         case 403: // 禁止访问
+          errorMessage = error.response.data?.error?.message || '没有权限访问该资源';
           if (onShowToast) {
-            onShowToast(error.response.data?.error?.message || '没有权限访问该资源');
+            onShowToast(errorMessage);
           }
           break;
           
         case 404: // 资源不存在
+          errorMessage = error.response.data?.error?.message || '请求的资源不存在';
           if (onShowToast) {
-            onShowToast(error.response.data?.error?.message || '请求的资源不存在');
+            onShowToast(errorMessage);
           }
           break;
           
         case 500: // 服务器错误
         default:
+          errorMessage = error.response.data?.error?.message || `服务器错误 (${status})`;
           if (onShowToast) {
-            onShowToast(error.response.data?.error?.message || `服务器错误 (${status})`);
+            onShowToast(errorMessage);
           }
           break;
       }
       
-      // 根据平台处理错误
-      if (Platform.OS === 'web') {
-        return Promise.resolve({ 
-          data: { 
-            success: false, 
-            message: error.response.data?.error?.message || '请求失败' 
-          } 
-        });
-      } else {
-        return Promise.reject(error);
-      }
+      // 统一返回格式
+      return Promise.resolve({
+        ...error.response,
+        data: { 
+          success: false, 
+          message: errorMessage,
+          error: error.response.data?.error || {
+            code: status,
+            message: errorMessage,
+            type: 'API_ERROR'
+          },
+          data: null
+        }
+      });
     }
   );
 
@@ -412,13 +445,14 @@ export function createApiClient(config: ApiClientConfig) {
     };
     
     try {
-      const response: AxiosResponse<TResponse> = await apiClient(axiosConfig);
+      const response = await apiClient(axiosConfig);
       return response.data;
     } catch (error: any) {
       // 如果提供了错误处理函数并返回true，表示错误已处理
       if (onError && onError(error) === true) {
         return {
           success: false,
+          message: '请求已被客户端处理',
           error: {
             code: -1,
             message: '请求已被客户端处理',
@@ -428,7 +462,23 @@ export function createApiClient(config: ApiClientConfig) {
         } as unknown as TResponse;
       }
       
-      return Promise.reject(error);
+      // 如果是响应拦截器已经处理过的错误，直接返回
+      if (error.data?.success === false) {
+        return error.data as unknown as TResponse;
+      }
+      
+      // 其他未处理的错误，返回统一格式
+      const errorMessage = error.message || '请求失败';
+      return {
+        success: false,
+        message: errorMessage,
+        error: {
+          code: -1,
+          message: errorMessage,
+          type: 'UNKNOWN_ERROR'
+        },
+        data: null
+      } as unknown as TResponse;
     }
   }
 

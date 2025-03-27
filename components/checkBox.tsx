@@ -11,12 +11,13 @@ import {
 
 export function CheckboxWithLabel({
   size,
+  width=300,
   label = "Accept terms and conditions",
   ...checkboxProps
-}: CheckboxProps & { label?: string }) {
+}: CheckboxProps & { label?: string; width?: number }) {
   const id = `checkbox-${(label || "").toString().slice(1)}`;
   return (
-    <XStack width={300} alignItems="center" gap="$4">
+    <XStack width={width} alignItems="center" gap="$4">
       <Checkbox id={id} size={size} {...checkboxProps}>
         <Checkbox.Indicator>
           <Check />

@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 44,
+    paddingHorizontal: 10,
   },
   helpRoot: {
     borderRadius: 2,

@@ -1,3 +1,4 @@
+import { TouchableOpacity } from "react-native";
 import { AlertDialog, Button, XStack, YStack, styled } from "tamagui";
 import type { ButtonProps } from "tamagui";
 

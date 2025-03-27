@@ -1,3 +1,6 @@
+import { PresetColorType, PresetStatusColorType } from "antd/lib/_util/colors";
+import { LiteralUnion } from "antd/lib/_util/type";
+
 
 
 export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
@@ -20,7 +23,34 @@ export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
     WinnerRunnerUp: '冠亚军',
   };
   
-
+export const TagColorMap:LiteralUnion<PresetColorType|PresetStatusColorType>[]=[
+    'green',
+    'success',
+    'warning',
+    'error',
+    'default',
+    'processing',
+    'blue',
+    'purple',
+    'orange',
+    'lime',
+    'gold',
+    'cyan',
+    'magenta',
+    'red',
+    'green',
+    'blue',
+    'purple',
+    'orange',
+    'lime',
+    'gold',
+    'cyan',
+    'magenta',
+    'red',
+    'green',
+    'blue',
+    'purple',
+]
   export const OrderStatusMap: Record<CommonCommonEnum.OrderStatus, string> = {
     1: "保存方案",
     2: "已取消",

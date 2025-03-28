@@ -1,41 +1,64 @@
-import { listBannerApi } from 'src/api/interface/banner';
-import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, StyleProp, ViewStyle, Dimensions, TouchableOpacity, Image} from 'react-native';
-import { router } from 'expo-router';
-import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  StyleProp,
+  ViewStyle,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import { router, useFocusEffect } from "expo-router";
+import { SwiperFlatList } from "react-native-swiper-flatlist";
+import { listAdApi } from "src/api/interface/ad";
 const defaultHeight = 140;
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const ITEM_WIDTH = width * 0.95;
 
-const CarouselComponent = (
-  props: {style?: StyleProp<ViewStyle>,className?: string}
-) => {
-  const [bannerList, setBannerList] = useState<PkgCustomerBanner.Banner[]>([]);
+const CarouselComponent = (props: {
+  style?: StyleProp<ViewStyle>;
+  className?: string;
+  adType: number;
+}) => {
+  const [bannerList, setBannerList] = useState<ServerCommonAd.Ad[]>([]);
 
-  useEffect(() => {
-    listBannerApi().then(res => {
-      res.data && setBannerList(res.data);
-    });
-  }, []);
+  useEffect(() => {}, []);
 
-  const goto = (item: PkgCustomerBanner.Banner) => {
-    switch (item.position) {
+  useFocusEffect(
+    useCallback(() => {
+      listAdApi({
+        appType: props.adType as CommonCommonEnum.AppType,
+        adType: 4,
+      }).then((res) => {
+        res.data && setBannerList(res.data);
+      });
+    }, [])
+  );
+
+  const goto = (item: ServerCommonAd.Ad) => {
+    switch (item.redirectType) {
       case 1:
         router.push({
-          pathname:'/home/notice',
-          params:{
-            item:JSON.stringify(item)
-          }
-         })
+          pathname: item.redirectUrl || "/home/notice",
+          params: {
+            item: JSON.stringify(item.adContent),
+          },
+        });
         break;
       case 2:
         break;
       default:
+        router.push({
+          pathname: item.redirectUrl || "/home/notice",
+          params: {
+            item: JSON.stringify(item.adContent),
+          },
+        });
         break;
     }
   };
 
-  const renderItem = ({item}: {item: PkgCustomerBanner.Banner}) => (
+  const renderItem = ({ item }: { item: ServerCommonAd.Ad }) => (
     <TouchableOpacity
       key={item.id}
       style={styles.root}
@@ -43,7 +66,7 @@ const CarouselComponent = (
       activeOpacity={1}
     >
       <Image
-        source={{uri: item.imageUrl.replace(/^https:\/\//i, "http://")}}
+        source={{ uri: item.imageUrl.replace(/^https:\/\//i, "http://") }}
         style={styles.image}
         resizeMode="cover"
       />
@@ -51,7 +74,10 @@ const CarouselComponent = (
   );
 
   return (
-    <View style={[{height: defaultHeight}, props.style]} className={`${props.className} justify-center items-center`}>
+    <View
+      style={[{ height: defaultHeight }, props.style]}
+      className={`${props.className} justify-center items-center`}
+    >
       {/* {bannerList.length > 0 && <Image
                 source={{uri: bannerList[0]?.imageUrl}}
                 style={styles.image}
@@ -94,7 +120,7 @@ export default CarouselComponent;
 const styles = StyleSheet.create({
   root: {
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
     height: defaultHeight,
     width: ITEM_WIDTH,
   },
@@ -107,7 +133,7 @@ const styles = StyleSheet.create({
     height: defaultHeight,
   },
   pagination: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 10,
   },
   dot: {

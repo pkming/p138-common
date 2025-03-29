@@ -28,6 +28,6 @@ export const showToast = (message: string) => {
   globalThis.Toast.show(message);
 };
 export const getImageUrl = (url: string) => {
-  return url.replace('http://', 'https://');
+  return url.replace('https://', 'http://');
 };
 

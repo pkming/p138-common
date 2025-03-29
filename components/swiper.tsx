@@ -30,7 +30,7 @@ const CarouselComponent = (props: {
         appType: props.appType as CommonCommonEnum.AppType,
         adType:5,
       }).then((res) => {
-        res.data && setBannerList(res.data);
+        setBannerList(res.data || []);
       });
     }, [])
   );

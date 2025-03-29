@@ -28,7 +28,7 @@ const CarouselComponent = (props: {
     useCallback(() => {
       listAdApi({
         appType: props.appType as CommonCommonEnum.AppType,
-        adType: 4,
+        adType:5,
       }).then((res) => {
         res.data && setBannerList(res.data);
       });

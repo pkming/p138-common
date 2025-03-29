@@ -18,7 +18,7 @@ const ITEM_WIDTH = width * 0.95;
 const CarouselComponent = (props: {
   style?: StyleProp<ViewStyle>;
   className?: string;
-  adType: number;
+  appType: number;
 }) => {
   const [bannerList, setBannerList] = useState<ServerCommonAd.Ad[]>([]);
 
@@ -27,7 +27,7 @@ const CarouselComponent = (props: {
   useFocusEffect(
     useCallback(() => {
       listAdApi({
-        appType: props.adType as CommonCommonEnum.AppType,
+        appType: props.appType as CommonCommonEnum.AppType,
         adType: 4,
       }).then((res) => {
         res.data && setBannerList(res.data);
@@ -73,6 +73,9 @@ const CarouselComponent = (props: {
     </TouchableOpacity>
   );
 
+  if (bannerList.length === 0) {
+    return null;
+  }
   return (
     <View
       style={[{ height: defaultHeight }, props.style]}

@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import {NativeModules} from 'react-native';
 import {useToast} from 'p138-common/components/toast/ToastContext';
+import dayjs from 'dayjs';
 const {InstallAPK} = NativeModules;
 
 const AppUpdateChecker = (props: {BaseURL: string}) => {
@@ -58,7 +59,7 @@ const AppUpdateChecker = (props: {BaseURL: string}) => {
         setIsUpdating(true);
         
         // 使用 FileSystem.documentDirectory 获取应用私有目录
-        const downloadDest = `${FileSystem.documentDirectory}app.apk`;
+        const downloadDest = `${FileSystem.documentDirectory}/138_${dayjs().valueOf()}.apk`;
         console.log('Download destination:', downloadDest);
 
         const downloadResumable = FileSystem.createDownloadResumable(
@@ -104,19 +105,28 @@ const AppUpdateChecker = (props: {BaseURL: string}) => {
 
   const installApk = async (filePath: string) => {
     try {
-      // 确保文件路径格式正确
-      const fileUri = filePath.startsWith('file://') ? filePath : `file://${filePath}`;
-      console.log('Installing APK from:', fileUri);
+      /// 移除 file:// 前缀，因为原生模块需要的是实际文件路径
+      const actualPath = filePath.replace('file://', '');
+      console.log('Installing APK from:', actualPath);
       
-      const canShare = await Sharing.isAvailableAsync();
-      if (canShare) {
-        await Sharing.shareAsync(fileUri, {
-          mimeType: 'application/vnd.android.package-archive',
-          dialogTitle: '安装更新',
-        });
-      } else {
-        Alert.alert('错误', '无法安装更新');
-      }
+      InstallAPK.installAPK(
+        actualPath,
+        (message: string) => {
+          console.log('Install success:', message);
+        },
+        (error: string) => {
+          console.error('Install failed:', error);
+        }
+      )
+      // const canShare = await Sharing.isAvailableAsync();
+      // if (canShare) {
+      //   await Sharing.shareAsync(fileUri, {
+      //     mimeType: 'application/vnd.android.package-archive',
+      //     dialogTitle: '安装更新',
+      //   });
+      // } else {
+      //   Alert.alert('错误', '无法安装更新');
+      // }
     } catch (error) {
       console.error('安装失败', error);
       Alert.alert('安装失败', '请稍后再试');

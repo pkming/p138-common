@@ -3,6 +3,7 @@ import {View, Text, Button, Alert, Platform} from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import {NativeModules} from 'react-native';
+import {useToast} from 'p138-common/components/toast/ToastContext';
 const {InstallAPK} = NativeModules;
 
 const AppUpdateChecker = (props: {BaseURL: string}) => {
@@ -10,7 +11,7 @@ const AppUpdateChecker = (props: {BaseURL: string}) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [progress, setProgress] = useState(0);
   const [currentVersion, setCurrentVersion] = useState('');
-  const downloadURL = 'https://business-ui-p138-dev.lengz.cc/download/138_b.apk';
+  const downloadURL = BaseURL + '/download/138.apk';
   useEffect(() => {
     // 获取当前应用版本
     const version = '1.0.0'; // 替换为实际的版本获取方法
@@ -55,8 +56,11 @@ const AppUpdateChecker = (props: {BaseURL: string}) => {
     if (Platform.OS === 'android') {
       try {
         setIsUpdating(true);
-        const downloadDest = `${FileSystem.documentDirectory}app.apk`;
         
+        // 使用 FileSystem.documentDirectory 获取应用私有目录
+        const downloadDest = `${FileSystem.documentDirectory}app.apk`;
+        console.log('Download destination:', downloadDest);
+
         const downloadResumable = FileSystem.createDownloadResumable(
           downloadUrl,
           downloadDest,
@@ -67,16 +71,26 @@ const AppUpdateChecker = (props: {BaseURL: string}) => {
           }
         );
 
-        const dataUrl= await downloadResumable.downloadAsync();
+        const downInfo = await downloadResumable.downloadAsync();
+        console.log('Download completed, file URI:', downInfo?.uri);
         
-        if (dataUrl?.uri) {
+        if (downInfo?.uri) {
           setIsUpdating(false);
-          Alert.alert('下载完成', '点击安装更新', [
-            {
-              text: '安装',
-              onPress: () => installApk(dataUrl?.uri),
-            },
-          ]);
+          
+          // 检查文件是否存在
+          const fileInfo = await FileSystem.getInfoAsync(downInfo?.uri);
+          console.log('File info:', fileInfo);
+          
+          if (fileInfo.exists) {
+            Alert.alert('下载完成', '点击安装更新', [
+              {
+                text: '安装',
+                onPress: () => installApk(downInfo?.uri),
+              },
+            ]);
+          } else {
+            Alert.alert('错误', '下载文件不存在');
+          }
         }
       } catch (error) {
         console.error('下载失败', error);
@@ -88,42 +102,30 @@ const AppUpdateChecker = (props: {BaseURL: string}) => {
     }
   };
 
-  // const installApk = async (filePath: string) => {
-  //   try {
-  //     const canShare = await Sharing.isAvailableAsync();
-  //     if (canShare) {
-  //       await Sharing.shareAsync(filePath, {
-  //         mimeType: 'application/vnd.android.package-archive',
-  //         dialogTitle: '安装更新',
-  //       });
-  //     } else {
-  //       Alert.alert('错误', '无法安装更新');
-  //     }
-  //   } catch (error) {
-  //     console.error('安装失败', error);
-  //     Alert.alert('安装失败', '请稍后再试');
-  //   }
-  // };
   const installApk = async (filePath: string) => {
-    console.log('filePath', filePath);
     try {
-      // 调用原生模块的安装方法
-      InstallAPK.installAPK(
-        filePath,
-        (message: string) => {
-          console.log('Install success:', message); // 安装成功的回调
-        },
-        (error: string) => {
-          console.error('Install failed:', error); // 安装失败的回调
-        },
-      );
+      // 确保文件路径格式正确
+      const fileUri = filePath.startsWith('file://') ? filePath : `file://${filePath}`;
+      console.log('Installing APK from:', fileUri);
+      
+      const canShare = await Sharing.isAvailableAsync();
+      if (canShare) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType: 'application/vnd.android.package-archive',
+          dialogTitle: '安装更新',
+        });
+      } else {
+        Alert.alert('错误', '无法安装更新');
+      }
     } catch (error) {
-      console.error('Error installing APK:', error);
+      console.error('安装失败', error);
+      Alert.alert('安装失败', '请稍后再试');
     }
   };
 
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>当前版本: {currentVersion}</Text>
       <Button 
         title="检查更新" 
         onPress={checkForUpdate}

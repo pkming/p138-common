@@ -10,6 +10,35 @@ export const TOKEN_KEY = 'auth_token';
 export const REFRESH_TOKEN_KEY = 'refresh_token';
 const AsyncStorage = window.localStorage;
 
+// ====== 设备ID管理 ======
+const DEVICE_ID_KEY = 'device_id';
+
+/**
+ * 生成设备ID
+ */
+function generateDeviceId(): string {
+  const timestamp = Date.now().toString(36);
+  const random = Math.random().toString(36).substring(2, 4);
+  return `${timestamp}${random}`;
+}
+
+/**
+ * 获取设备ID
+ */
+async function getDeviceId(): Promise<string> {
+  try {
+    let deviceId = await AsyncStorage.getItem(DEVICE_ID_KEY);
+    if (!deviceId) {
+      deviceId = generateDeviceId();
+      await AsyncStorage.setItem(DEVICE_ID_KEY, deviceId);
+    }
+    return deviceId;
+  } catch (error) {
+    console.error('获取设备ID失败');
+    return generateDeviceId();
+  }
+}
+
 // ====== 类型定义 ======
 
 
@@ -118,8 +147,12 @@ export function createApiClient(config: ApiClientConfig) {
     headers: {
       'Content-Type': 'application/json',
       'X-Platform': 'web',
-      // 'device-info': JSON.stringify(getDeviceInfo()),
     },
+  });
+
+  // 初始化设备ID
+  getDeviceId().then(deviceId => {
+    apiClient.defaults.headers.common['X-Device-Id'] = deviceId;
   });
 
   // 如果有应用版本号，添加到请求头

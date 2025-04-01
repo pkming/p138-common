@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, Button, Alert, Platform} from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 import {NativeModules} from 'react-native';
-import {useToast} from 'p138-common/components/toast/ToastContext';
 import dayjs from 'dayjs';
 const {InstallAPK} = NativeModules;
 

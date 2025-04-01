@@ -2,7 +2,7 @@
  * P138通用API框架
  */
 
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 import { getDeviceInfo } from 'p138-common/utils/deviceUtils';
@@ -11,150 +11,6 @@ import { generateSnowflakeId } from './snowflake';
 // ====== 常量 ======
 export const TOKEN_KEY = 'auth_token';
 export const REFRESH_TOKEN_KEY = 'refresh_token';
-
-// ====== 类型定义 ======
-
-/**p
- * API命名空间
- */
-export namespace P138Api {
-  /**
-   * 分页信息
-   */
-  export interface Pagination {
-    current: number;
-    pageSize: number;
-    total: number;
-    pages: number;
-  }
-
-  /**
-   * 分页响应
-   */
-  export interface PagedResponse<T> {
-    list: T[];
-    pagination: Pagination;
-  }
-
-  /**
-   * API成功响应
-   */
-  export interface ApiResponse<T> {
-    data: T;
-    success: true;
-    message?: string;
-    requestID?: string;
-  }
-
-  /**
-   * API错误
-   */
-  export interface ApiError {
-    code: number;
-    message: string;
-    type: string;
-  }
-
-  /**
-   * API错误响应
-   */
-  export interface ErrorResponse {
-    error: ApiError;
-    requestID: string;
-    success: false;
-    data: null;
-  }
-
-  /**
-   * 标准响应包装类型
-   */
-  export type ResponseWrapper<T> = ApiResponse<T> | ErrorResponse;
-
-  /**
-   * 排序方向
-   */
-  export type SortDirection = 'asc' | 'desc';
-
-  /**
-   * 排序参数
-   */
-  export interface SortParams {
-    sort?: string;
-    direction?: SortDirection;
-  }
-
-  /**
-   * 查询参数
-   */
-  export interface QueryParams {
-    keyword?: string;
-    current?: number;
-    pageSize?: number;
-  }
-
-  /**
-   * 时间范围参数
-   */
-  export interface TimeRangeParams {
-    startTime?: string;
-    endTime?: string;
-  }
-
-  /**
-   * 通用查询参数
-   */
-  export interface CommonQueryParams extends QueryParams, SortParams, TimeRangeParams {}
-}
-
-/**
- * 错误响应类型
- */
-export interface ZYError {
-  error: {
-    code: number;
-    message: string;
-    type: string;
-  };
-  requestID: string;
-  success: boolean;
-}
-
-/**
- * 请求配置接口
- */
-export interface RequestProps<
-  TQuery = Record<string, any>,
-  TData = Record<string, any>,
-  THeader = any
-> {
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-  url: string;
-  query?: TQuery;
-  data?: TData;
-  header?: THeader;
-  ignoreAuth?: boolean;
-  onError?: (error: any) => boolean;
-}
-
-/**
- * API客户端配置
- */
-export interface ApiClientConfig {
-  // 基础URL
-  baseURL: string;
-  // 超时时间
-  timeout?: number;
-  // 应用版本号
-  appVersion?: string;
-  // 退出登录回调
-  onLogout?: () => void;
-  // 显示消息回调
-  onShowToast?: (message: string) => void;
-  // 刷新Token的URL路径
-  refreshTokenPath?: string;
-}
-
-// ====== Token管理 ======
 
 /**
  * 获取访问令牌
@@ -217,7 +73,7 @@ export async function clearTokens(): Promise<void> {
  * 创建API客户端
  * 所有项目特定的配置都必须由具体项目提供
  */
-export function createApiClient(config: ApiClientConfig) {
+export function createApiClient(config: P138Api.ApiClientConfig) {
   // ====== 回调函数 ======
   let onLogout = config.onLogout;
   let onShowToast = config.onShowToast;
@@ -241,7 +97,6 @@ export function createApiClient(config: ApiClientConfig) {
       'Content-Type': 'application/json',
       'X-Platform': Platform.OS,
       'device-info': JSON.stringify(getDeviceInfo()),
- 
     },
   });
 
@@ -264,6 +119,7 @@ export function createApiClient(config: ApiClientConfig) {
         
         }
       }
+      config.metadata = { startTime: Date.now() };
       config.headers.traceID = generateSnowflakeId();
       // 移除特殊标记
       if (config.headers) {
@@ -279,6 +135,8 @@ export function createApiClient(config: ApiClientConfig) {
   apiClient.interceptors.response.use(
     (response) => {
       // 检查响应是否成功
+      const duration = Date.now() - response.config.metadata.startTime;
+      console.log(`[${response.config.url}] 耗时: ${duration}ms`);
       if (response.data?.success) {
         return response;
       } else {
@@ -303,7 +161,7 @@ export function createApiClient(config: ApiClientConfig) {
         });
       }
     },
-    async (error: AxiosError<ZYError>) => {
+    async (error: AxiosError<P138Api.ZYError>) => {
       // 处理响应错误
       if (!error.config || !error.response) {
         if (onShowToast) {
@@ -425,7 +283,7 @@ export function createApiClient(config: ApiClientConfig) {
    * 通用请求方法
    */
   async function request<TResponse, TQuery = Record<string, any>, TData = Record<string, any>, THeader = any>(
-    props: RequestProps<TQuery, TData, THeader>
+    props: P138Api.RequestProps<TQuery, TData, THeader>
   ): Promise<TResponse> {
     const { 
       method, 
@@ -488,7 +346,7 @@ export function createApiClient(config: ApiClientConfig) {
   }
 
   // 更新配置函数
-  function updateConfig(newConfig: Partial<ApiClientConfig>): void {
+  function updateConfig(newConfig: Partial<P138Api.ApiClientConfig>): void {
     if (newConfig.baseURL) {
       apiClient.defaults.baseURL = newConfig.baseURL;
     }

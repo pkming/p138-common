@@ -3,14 +3,14 @@ import { LiteralUnion } from "antd/lib/_util/type";
 
 
 
-export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, string> = {
+export const lotteryNameMap: Record<CommonCommonEnum.LotteryName, CommonCommonEnum.LotteryChineseName> = {
     FootballLottery: '竞彩足球',
     BasketballLottery: '竞彩篮球',
     DoubleBall: '双色球',
-    ArrangedFive: '排列5',
+    ArrangedFive: '排列五',
     ArrangedThree: '排列三',
     SuperLotto: '大乐透',
-    ChooseNine: '任选9',
+    ChooseNine: '任选九',
     WinLossLottery: '胜负彩',
     BeijingSingleMatch: '北京单场',
     SevenHappy: '七星彩',
@@ -51,7 +51,8 @@ export const TagColorMap:LiteralUnion<PresetColorType|PresetStatusColorType>[]=[
     'blue',
     'purple',
 ]
-  export const OrderStatusMap: Record<CommonCommonEnum.OrderStatus, string> = {
+  export const OrderStatusMap: Record<CommonCommonEnum.OrderStatus | 0, string> = {
+    0:'全部',
     1: "保存方案",
     2: "已取消",
     3: "待接单",

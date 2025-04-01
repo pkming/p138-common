@@ -5,6 +5,8 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
+import { getDeviceInfo } from 'p138-common/utils/deviceUtils';
+import { generateSnowflakeId } from './snowflake';
 
 // ====== 常量 ======
 export const TOKEN_KEY = 'auth_token';
@@ -238,6 +240,8 @@ export function createApiClient(config: ApiClientConfig) {
     headers: {
       'Content-Type': 'application/json',
       'X-Platform': Platform.OS,
+      'device-info': JSON.stringify(getDeviceInfo()),
+ 
     },
   });
 
@@ -256,10 +260,11 @@ export function createApiClient(config: ApiClientConfig) {
         const token = await getToken();
         if (token) {
           config.headers = config.headers || {};
-          config.headers.Authorization = `Bearer ${token}`;
+          config.headers.Authorization = `${token}`;
+        
         }
       }
-      
+      config.headers.traceID = generateSnowflakeId();
       // 移除特殊标记
       if (config.headers) {
         delete config.headers.ignoreAuth;

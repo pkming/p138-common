@@ -5,9 +5,9 @@
  */
 
 import { Dimensions, Platform, PixelRatio, StatusBar, NativeModules } from 'react-native';
-import { getLocales } from 'expo-localization';
+// import { getLocales } from 'expo-localization';
 import Constants from 'expo-constants';
-
+import DeviceInfo from 'react-native-device-info';
 /**
  * 设备屏幕尺寸
  */
@@ -83,7 +83,7 @@ export function getDeviceId(): string {
  * @returns 版本号
  */
 export function getAppVersion(): string {
-  return Constants.manifest?.version || '1.0.0';
+  return DeviceInfo.getVersion() || '1.0.0';
 }
 
 /**
@@ -98,20 +98,21 @@ export function getOSVersion(): string {
  * 获取设备制造商和型号
  * @returns 设备型号信息
  */
-export function getDeviceInfo(): {brand: string, model: string} {
+export function getDeviceInfo(): {brand: string, model: string, appVersion: string} {
   return {
     brand: Constants.deviceName?.split(' ')[0] || '',
     model: Constants.deviceName || '',
+    appVersion: DeviceInfo.getVersion() || '1.0.0',
   };
 }
 
-/**
- * 获取设备当前区域设置
- * @returns 区域设置，如zh-CN
- */
-export function getDeviceLocale(): string {
-  return getLocales()[0]?.languageTag || 'en-US';
-}
+// /**
+//  * 获取设备当前区域设置
+//  * @returns 区域设置，如zh-CN
+//  */
+// export function getDeviceLocale(): string {
+//   return getLocales()[0]?.languageTag || 'en-US';
+// }
 
 /**
  * 判断设备是否为iOS刘海屏

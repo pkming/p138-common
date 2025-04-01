@@ -61,7 +61,5 @@ class Snowflake {
  * 导出生成唯一ID的函数
  */
 export function generateSnowflakeId(): string {
-  const id = Snowflake.getInstance().nextId();
-  console.log("generateSnowflakeId", id);
-  return id;
+  return Snowflake.getInstance().nextId();
 }

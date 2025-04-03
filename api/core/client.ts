@@ -26,7 +26,12 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
   ) {
     for (const middleware of middlewares) {
       if (middleware[type]) {
-        await middleware[type](context);
+        const result = await middleware[type](context);
+        // 如果是错误中间件并且返回了结果，则使用该结果作为响应
+        if (type === 'onError' && result) {
+          context.response = { data: result } as any;
+          return result;
+        }
       }
     }
   }
@@ -93,6 +98,11 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         // 执行错误中间件
         if (!skipErrorHandler) {
           await executeMiddlewares('onError', context);
+          
+          // 如果错误中间件设置了响应，则返回该响应
+          if (context.response) {
+            return context.response.data as TResponse;
+          }
         }
         
         throw error;

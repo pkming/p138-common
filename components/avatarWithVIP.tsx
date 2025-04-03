@@ -1,4 +1,4 @@
-import { defaultImage } from 'src/api/env.config';
+
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 
@@ -25,7 +25,7 @@ const AvatarWithVIP = ({avatar, vipIndex}: AvatarWithVIPProps) => {
   return (
     <View>
       <Image
-        source={{uri: avatar || defaultImage}}
+        source={{uri: avatar}}
         style={styles.avatar}
         resizeMode="stretch"
       />

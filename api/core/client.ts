@@ -17,7 +17,7 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
     }
   });
 
-  const middlewares: P138Api.IMiddleware[] = [errorMiddleware, tokenMiddleware, requestIdMiddleware];
+  const middlewares: P138Api.IMiddleware[] = [errorMiddleware, requestIdMiddleware];
 
   // 执行中间件
   async function executeMiddlewares(
@@ -55,9 +55,9 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         config: {
           ...config,
           storage: {
-            getItem: (key: string) => localStorage.getItem(key),
-            setItem: (key: string, value: string) => localStorage.setItem(key, value),
-            removeItem: (key: string) => localStorage.removeItem(key)
+            getItem: async (key: string) => Promise.resolve(localStorage.getItem(key)),
+            setItem: async (key: string, value: string) => Promise.resolve(localStorage.setItem(key, value)),
+            removeItem: async (key: string) => Promise.resolve(localStorage.removeItem(key))
           },
           toast: {
             show: (message: string) => config.onShowToast?.(message) ,

@@ -35,6 +35,7 @@ export const STORAGE_KEYS = {
   REFRESH_TOKEN: '@p138/auth/refreshToken',
   USER_INFO: '@p138/auth/user',
   OAUTH_TOKEN: '@p138/auth/oAuthToken',
+  CREDENTIALS: '@p138/auth/credentials',
 } as const;
 
 // 默认图片

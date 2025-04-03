@@ -17,12 +17,12 @@ declare namespace P138Api {
     /**
      * 获取或创建设备ID
      */
-    getOrCreateDeviceId(): string;
+    getOrCreateDeviceId(): Promise<string>;
     
     /**
      * 清除设备ID
      */
-    clearDeviceId(): void;
+    clearDeviceId(): Promise<void>;
   }
 
   /**
@@ -33,9 +33,9 @@ declare namespace P138Api {
     timeout?: number;
     header?: Record<string, string>;
     storage: {
-      getItem: (key: string) => string | null;
-      setItem: (key: string, value: string) => void;
-      removeItem: (key: string) => void;
+      getItem: (key: string) => Promise<string | null>;
+      setItem: (key: string, value: string) => Promise<void>;
+      removeItem: (key: string) => Promise<void>;
     };
     toast: {
       show: (message: string) => void;
@@ -55,9 +55,9 @@ declare namespace P138Api {
   interface IPlatformConfig extends IBaseConfig {
     // 存储相关
     storage: {
-      getItem: (key: string) => string | null;
-      setItem: (key: string, value: string) => void;
-      removeItem: (key: string) => void;
+      getItem: (key: string) => Promise<string | null>;
+      setItem: (key: string, value: string) => Promise<void>;
+      removeItem: (key: string) => Promise<void>;
     };
     // 提示相关
     toast: {

@@ -11,7 +11,7 @@ const DEVICE_ID_KEY = '@p138/device/id';
  * Web平台设备ID生成器
  */
 export class WebDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
-  getOrCreateDeviceId(): string {
+  async getOrCreateDeviceId(): Promise<string> {
     const existingId = localStorage.getItem(DEVICE_ID_KEY);
     if (existingId) {
       return existingId;
@@ -35,8 +35,25 @@ export class WebDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
     return deviceId;
   }
 
-  clearDeviceId(): void {
+  async clearDeviceId(): Promise<void> {
     localStorage.removeItem(DEVICE_ID_KEY);
+  }
+}
+
+/**
+ * 创建适配器
+ */
+export class AsyncStorageAdapter {
+  static getItem(key: string): Promise<string | null> {
+    return Promise.resolve(localStorage.getItem(key));
+  }
+
+  static setItem(key: string, value: string): Promise<void> {
+    return Promise.resolve(localStorage.setItem(key, value));
+  }
+
+  static removeItem(key: string): Promise<void> {
+    return Promise.resolve(localStorage.removeItem(key));
   }
 }
 
@@ -57,9 +74,9 @@ export function createWebApiClient(config: IWebConfig): P138Api.IApiClient {
   return createApiClient({
     ...config,
     storage: {
-      getItem: (key: string) => localStorage.getItem(key),
-      setItem: (key: string, value: string) => localStorage.setItem(key, value),
-      removeItem: (key: string) => localStorage.removeItem(key)
+      getItem: (key: string) => AsyncStorageAdapter.getItem(key),
+      setItem: (key: string, value: string) => AsyncStorageAdapter.setItem(key, value),
+      removeItem: (key: string) => AsyncStorageAdapter.removeItem(key)
     },
     toast: {
       show: (message: string) => config.onShowToast?.(message),

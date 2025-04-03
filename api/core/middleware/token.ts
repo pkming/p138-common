@@ -3,8 +3,9 @@
  * 处理token的添加和刷新
  */
 
-import { STORAGE_KEYS } from '@/p138-common/config';
+
 import dayjs from 'dayjs';
+import { STORAGE_KEYS } from 'p138-common/config';
 
 // 刷新token的状态管理
 const tokenState = {
@@ -46,7 +47,7 @@ async function refreshToken(config: P138Api.IBaseConfig): Promise<boolean> {
   tokenState.isRefreshing = true;
   tokenState.refreshPromise = (async () => {
     try {
-      const oAuthToken: ServerCommonAuth.OAuthToken = JSON.parse(config.storage.getItem(STORAGE_KEYS.OAUTH_TOKEN) || '{}');
+      const oAuthToken: ServerCommonAuth.OAuthToken = JSON.parse(await config.storage.getItem(STORAGE_KEYS.OAUTH_TOKEN) || '{}');
       if (!oAuthToken?.refresh_token) {
         executeLogout(config);
         return false;
@@ -95,8 +96,8 @@ function isTokenExpired(token: ServerCommonAuth.OAuthToken): boolean {
 /**
  * 获取并解析token
  */
-function getToken(config: P138Api.IBaseConfig): ServerCommonAuth.OAuthToken | null {
-  const tokenStr = config.storage.getItem(STORAGE_KEYS.OAUTH_TOKEN);
+async function getToken(config: P138Api.IBaseConfig): Promise<ServerCommonAuth.OAuthToken | null> {
+  const tokenStr = await config.storage.getItem(STORAGE_KEYS.OAUTH_TOKEN);
   if (!tokenStr) {
     console.log('未找到token');
     return null;
@@ -117,7 +118,7 @@ export const tokenMiddleware: P138Api.IMiddleware = {
       return;
     }
 
-    const token = getToken(config);
+    const token = await getToken(config);
     if (!token) return;
 
     if (isTokenExpired(token)) {
@@ -129,7 +130,7 @@ export const tokenMiddleware: P138Api.IMiddleware = {
         return;
       }
 
-      const newToken = getToken(config);
+      const newToken = await getToken(config);
       if (newToken) {
         setAuthorizationHeader(request, newToken);
       }

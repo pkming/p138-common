@@ -4,15 +4,16 @@
 
 import CryptoJS from 'crypto-js';
 import { createApiClient } from '../core/client';
+import { storageAdapter } from './storage';
 
 const DEVICE_ID_KEY = '@p138/device/id';
-
+// console.log('localStorage', localStorage);
 /**
  * Web平台设备ID生成器
  */
 export class WebDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
   async getOrCreateDeviceId(): Promise<string> {
-    const existingId = localStorage.getItem(DEVICE_ID_KEY);
+    const existingId = await storageAdapter.getItem(DEVICE_ID_KEY);
     if (existingId) {
       return existingId;
     }
@@ -31,12 +32,12 @@ export class WebDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
     
     // 生成设备ID
     const deviceId = CryptoJS.MD5(components.join('|')).toString();
-    localStorage.setItem(DEVICE_ID_KEY, deviceId);
+    await storageAdapter.setItem(DEVICE_ID_KEY, deviceId);
     return deviceId;
   }
 
   async clearDeviceId(): Promise<void> {
-    localStorage.removeItem(DEVICE_ID_KEY);
+    await storageAdapter.removeItem(DEVICE_ID_KEY);
   }
 }
 
@@ -45,15 +46,15 @@ export class WebDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
  */
 export class AsyncStorageAdapter {
   static getItem(key: string): Promise<string | null> {
-    return Promise.resolve(localStorage.getItem(key));
+    return storageAdapter.getItem(key);
   }
 
   static setItem(key: string, value: string): Promise<void> {
-    return Promise.resolve(localStorage.setItem(key, value));
+    return storageAdapter.setItem(key, value);
   }
 
   static removeItem(key: string): Promise<void> {
-    return Promise.resolve(localStorage.removeItem(key));
+    return storageAdapter.removeItem(key);
   }
 }
 

@@ -60,9 +60,9 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         config: {
           ...config,
           storage: {
-            getItem: async (key: string) => Promise.resolve(localStorage.getItem(key)),
-            setItem: async (key: string, value: string) => Promise.resolve(localStorage.setItem(key, value)),
-            removeItem: async (key: string) => Promise.resolve(localStorage.removeItem(key))
+            getItem: async (key: string) => config.storage.getItem(key),
+            setItem: async (key: string, value: string) => config.storage.setItem(key, value),
+            removeItem: async (key: string) => config.storage.removeItem(key)
           },
           toast: {
             show: (message: string) => config.onShowToast?.(message) ,

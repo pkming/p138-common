@@ -13,7 +13,7 @@ export const requestIdMiddleware: P138Api.IMiddleware = {
     context.request.header = {
       ...context.request.header,
       'X-Request-ID': generateSnowflakeId(),
-      'X-Device-ID': context.config.deviceIdGenerator?.getOrCreateDeviceId() || ''
+      'X-Device-ID': await context.config.deviceIdGenerator?.getOrCreateDeviceId() || ''
     };
   }
 }; 

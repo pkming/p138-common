@@ -1,3 +1,5 @@
+import { storageAdapter } from '../platforms/storage';
+
 /**
  * 19位雪花算法配置
  */
@@ -20,17 +22,16 @@ export const SNOWFLAKE_CONFIG = {
   // 节点 ID 左移位数: STEP_BITS = 12
   NODE_SHIFT: 12
 }
+console.log('SNOWFLAKE_CONFIG', SNOWFLAKE_CONFIG);
 
-/**
- * 获取设备唯一标识
- */
-function getDeviceId(): number {
-  let deviceId = localStorage.getItem('deviceId');
+async function getDeviceId(): Promise<number> {
+  const deviceId = await storageAdapter.getItem('deviceId');
   if (!deviceId) {
     // 使用 NODE_MAX (1023) 作为最大值
     // 生成 0-1023 之间的随机数作为设备ID
-    deviceId = Math.floor(Math.random() * (SNOWFLAKE_CONFIG.NODE_MAX + 1)).toString();
-    localStorage.setItem('deviceId', deviceId);
+    const newDeviceId = Math.floor(Math.random() * (SNOWFLAKE_CONFIG.NODE_MAX + 1)).toString();
+    await storageAdapter.setItem('deviceId', newDeviceId);
+    return parseInt(newDeviceId);
   }
   return parseInt(deviceId);
 }
@@ -40,12 +41,12 @@ function getDeviceId(): number {
  */
 class Snowflake {
   private static instance: Snowflake;
+  private deviceId: number = 0; // 初始化 deviceId
+  private lastTimestamp: number = 0;
   private sequence: number = 0;
-  private lastTimestamp: number = -1;
-  private deviceId: number;
 
   private constructor() {
-    this.deviceId = getDeviceId();
+    getDeviceId().then(id => this.deviceId = id);
   }
 
   public static getInstance(): Snowflake {

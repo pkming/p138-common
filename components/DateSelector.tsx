@@ -131,7 +131,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 16,
     gap: 8,
   },
   dateButton: {
@@ -168,7 +167,7 @@ const styles = StyleSheet.create({
   cardText: {
     color: "white",
     fontSize: 14,
-    // marginBottom: 8,
+    marginBottom: 8,
   },
   cardValue: {
     color: "white",

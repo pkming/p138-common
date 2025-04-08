@@ -17,7 +17,7 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
     }
   });
 
-  const middlewares: P138Api.IMiddleware[] = [errorMiddleware, requestIdMiddleware];
+  const middlewares: P138Api.IMiddleware[] = [errorMiddleware, requestIdMiddleware,tokenMiddleware];
 
   // 执行中间件
   async function executeMiddlewares(

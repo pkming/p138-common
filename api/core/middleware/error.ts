@@ -6,9 +6,9 @@ export const errorMiddleware: P138Api.IMiddleware = {
 
     // 处理网络错误
     if (!error.response) {
-      config.toast.error('网络连接失败，请检查网络设置');
+      config.toast.error(`处理网络错误:${error.message} ${error.response} ${error} `);
       // 设置一个默认响应，防止错误继续传播
-      context.response = { data: { success: false, message: '网络连接失败，请检查网络设置' } } as any;
+      context.response = { data: { success: false, message: error.message } } as any;
       return;
     }
 

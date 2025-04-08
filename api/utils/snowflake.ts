@@ -83,7 +83,6 @@ class Snowflake {
     const id = BigInt(timestamp) << BigInt(SNOWFLAKE_CONFIG.TIME_SHIFT) |
                BigInt(this.deviceId) << BigInt(SNOWFLAKE_CONFIG.NODE_SHIFT) |
                BigInt(this.sequence);
-    console.log(id.toString());
     return id.toString();
   }
 

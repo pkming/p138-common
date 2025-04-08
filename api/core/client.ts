@@ -90,7 +90,7 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         if (!skipTokenHandler) {
           await executeMiddlewares('onResponse', context);
         }
-
+        console.log(context.request,config.baseURL, '==client.request==');
         return response.data;
       } catch (error) {
         context.error = error as any;

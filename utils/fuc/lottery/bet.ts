@@ -52,7 +52,6 @@ export function jumentSingle(
     const handicapDtosPlayEnglishName = selectedMatches[matchId]?.map(
       key => parseOddsCellKey(key).playEnglishName,
     );
-    console.log(matchInfo,'======11');
     const notSingle = matchInfo.handicapDtos?.find(
       handicapDto =>
         handicapDto.single === '1' &&
@@ -223,7 +222,6 @@ function getCombinations(
       indices[j] = indices[j - 1] + 1;
     }
   }
-  console.log(1);
   return combinations;
 }
 

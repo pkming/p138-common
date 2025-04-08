@@ -38,21 +38,21 @@ export class ExpoDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
         applicationId: Application.applicationId,
         // installationId:  Application.getAndroidId(),
       };
-      console.log('deviceInfo', DeviceInfo);
+
 
       // 等待所有 Promise 完成
       const deviceInfoValues = await Promise.all(Object.values(deviceInfo));
 
       // 生成设备ID
-      const deviceId = deviceInfoValues
+      const deviceId = Math.abs(deviceInfoValues
         .filter(Boolean)
         .join('|')
         .split('')
         .reduce((acc, char) => {
           return ((acc << 5) - acc) + char.charCodeAt(0);
-        }, 0)
+        }, 0))
         .toString(16);
-
+        console.log('deviceInfo', deviceId);
       // 保存到存储
       await AsyncStorage.setItem(DEVICE_ID_KEY, deviceId);
       return deviceId;

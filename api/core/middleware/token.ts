@@ -4,6 +4,7 @@
  */
 
 
+import axios from 'axios';
 import dayjs from 'dayjs';
 import { STORAGE_KEYS } from 'p138-common/config';
 
@@ -152,6 +153,17 @@ export const tokenMiddleware: P138Api.IMiddleware = {
   },
 
   async onError(context) {
-
+    // 401 token 失效或者过期  刷新一次，如果刷新失败，执行登出
+    if(context.error.response.status === 401){
+      const refreshSuccess = await refreshToken(context.config);
+      if (!refreshSuccess) {
+        console.log('Token刷新失败，执行登出');
+        executeLogout(context.config);
+        return;
+      }else{
+        context.isRetry = true;
+      }
+      return;
+    }
   },
 };

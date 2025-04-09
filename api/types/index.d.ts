@@ -45,7 +45,7 @@ declare namespace P138Api {
     logout: () => void;
     onShowToast?: (message: string) => void;
     onLogout?: () => void;
-    refreshTokenApi: (refreshToken: string) => Promise<{ data: any }>;
+    refreshTokenApi: (refreshToken: string) => Promise<{ data: ServerCommonAuth.OAuthToken }>;
     deviceIdGenerator: IDeviceIdGenerator;
   }
 
@@ -104,6 +104,7 @@ declare namespace P138Api {
     };
     response?: any;
     error?: any;
+    isRetry?: boolean;
     config: IBaseConfig;
   }
 

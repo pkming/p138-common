@@ -94,11 +94,14 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         return response.data;
       } catch (error) {
         context.error = error as any;
-        
         // 执行错误中间件
         if (!skipErrorHandler) {
           await executeMiddlewares('onError', context);
           
+          if(context.isRetry){
+            context.isRetry = false;
+            return this.request(props)
+          }
           // 如果错误中间件设置了响应，则返回该响应
           if (context.response) {
             return context.response.data as TResponse;

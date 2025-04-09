@@ -21,10 +21,9 @@ export const errorMiddleware: P138Api.IMiddleware = {
         // 设置一个默认响应，防止错误继续传播
         context.response = { data: { success: false, message: data.error.message || '请求参数错误' } } as any;
         break;
+      // 401 未授权 - 不在这里处理，让业务层处理token刷新逻辑
       case 401:
-        config.toast.error(data.error.message);
-        // 设置一个默认响应，防止错误继续传播
-        context.response = { data: { success: false, message: data.error.message } } as any;
+        // 不显示错误提示，也不设置默认响应，让错误继续传播到业务层
         break;
       case 403:
         config.toast.error(data.error.message || '没有权限访问');

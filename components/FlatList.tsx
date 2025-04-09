@@ -1,6 +1,7 @@
+import { kScreenHeight, kScreenWidth } from 'p138-common/utils/fuc/fc.rn';
 import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, FlatList as RNFlatList, Image, RefreshControl, ActivityIndicator } from 'react-native';
-import { kScreenHeight, kScreenWidth } from 'src/utils';
+
 
 interface FlatListProps<T> {
   data: T[];
@@ -25,7 +26,7 @@ interface FlatListProps<T> {
   ItemSeparatorComponent?: React.ComponentType<any>;
 }
 
-const NO_DATA_IMAGE = require('src/asset/jpImages/no_data.png');
+const NO_DATA_IMAGE = require('src/asset/imgs/no_data.png');
 
 export function FlatList<T>({
   data,

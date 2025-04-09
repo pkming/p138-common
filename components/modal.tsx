@@ -51,7 +51,7 @@ const CustomModal: React.FC<CustomModalProps> = ({
             // activeOpacity={1}
             onPress={onClose}>
             <Image
-              source={require('src/asset/jpImages/close2.png')}
+              source={require('src/asset/imgs/close2.png')}
               style={{ width: 40, height: 40 }}
             />
           </TouchableOpacity>

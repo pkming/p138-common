@@ -24,8 +24,8 @@ interface CustomTextInputProps extends TextInputProps {
   textStyle?: StyleProp<TextStyle>;
   containerStyle?: StyleProp<ViewStyle>;
 }
-const hideEye = require("src/asset/jpImages/login/icon_login_hideye.png");
-const showEye = require("src/asset/jpImages/login/icon_login_eye.png");
+const hideEye = require("src/asset/imgs/icon_login_hideye.png");
+const showEye = require("src/asset/imgs/icon_login_eye.png");
 const ZTextInput: React.FC<CustomTextInputProps> = ({
   label,
   error,

@@ -34,7 +34,7 @@ const RightTextButton = (props: RightTextButtonPorps) => {
         {props.title}{" "}
       </Text>
       <Image
-        source={require("src/asset/jpImages/chat/arrow_right_grey.png")}
+        source={require("src/asset/imgs/arrow_right_grey.png")}
         style={[{width:ICON_SIZES.xsmall,height:ICON_SIZES.xsmall}, props.imageStyle]}
         resizeMode="stretch"
       />

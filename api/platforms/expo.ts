@@ -48,7 +48,7 @@ export class ExpoDeviceIdGenerator implements P138Api.IDeviceIdGenerator {
         .filter(Boolean)
         .join('|')
         .split('')
-        .reduce((acc, char) => {
+        .reduce((acc: number, char: string) => {
           return ((acc << 5) - acc) + char.charCodeAt(0);
         }, 0))
         .toString(16);

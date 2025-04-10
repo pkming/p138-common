@@ -5,7 +5,18 @@
 import axios from 'axios';
 import { errorMiddleware } from './middleware/error';
 import { tokenMiddleware } from './middleware/token';
-import { requestIdMiddleware } from './middleware/requestId';
+
+// 根据平台动态导入requestId中间件
+let requestIdMiddleware: P138Api.IMiddleware;
+if (typeof window !== 'undefined') {
+  // Web平台
+  requestIdMiddleware = require('./middleware/requestId.web').requestWebIdMiddleware;
+} else {
+  // 其他平台
+  requestIdMiddleware = require('./middleware/requestId').requestIdMiddleware;
+}
+
+console.log('requestIdMiddleware', requestIdMiddleware);
 
 export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient {
   const client = axios.create({
@@ -17,7 +28,7 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
     }
   });
 
-  const middlewares: P138Api.IMiddleware[] = [errorMiddleware, requestIdMiddleware,tokenMiddleware];
+  const middlewares: P138Api.IMiddleware[] = [errorMiddleware, requestIdMiddleware, tokenMiddleware];
 
   // 执行中间件
   async function executeMiddlewares(
@@ -90,18 +101,15 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         if (!skipTokenHandler) {
           await executeMiddlewares('onResponse', context);
         }
-        console.log(context.request,config.baseURL, '==client.request==');
+
         return response.data;
       } catch (error) {
         context.error = error as any;
+        
         // 执行错误中间件
         if (!skipErrorHandler) {
           await executeMiddlewares('onError', context);
           
-          if(context.isRetry){
-            context.isRetry = false;
-            return this.request(props)
-          }
           // 如果错误中间件设置了响应，则返回该响应
           if (context.response) {
             return context.response.data as TResponse;

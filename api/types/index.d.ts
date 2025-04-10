@@ -32,6 +32,7 @@ declare namespace P138Api {
     baseURL: string;
     timeout?: number;
     header?: Record<string, string>;
+    isWeb?: boolean;
     storage: {
       getItem: (key: string) => Promise<string | null>;
       setItem: (key: string, value: string) => Promise<void>;

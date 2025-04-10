@@ -11,7 +11,7 @@ import {
 import { ViewStyle } from "react-native";
 import { useRouter } from "expo-router";
 interface AppHeaderProps {
-  title: string; // 标题文字
+  title?: string; // 标题文字
   onBackPress?: () => void; // 返回按钮点击事件
   leftComponent?: React.ReactNode; // 左侧自定义组件
   rightComponent?: React.ReactNode; // 右侧自定义组件

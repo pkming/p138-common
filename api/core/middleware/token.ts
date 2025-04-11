@@ -84,13 +84,6 @@ function isTokenExpired(token: ServerCommonAuth.OAuthToken): boolean {
   const now = dayjs();
   const expiry = dayjs(token.expiry);
   const isExpired = now.isAfter(expiry);
-  
-  console.log('Token状态:', {
-    当前时间: now.format('YYYY-MM-DD HH:mm:ss'),
-    过期时间: expiry.format('YYYY-MM-DD HH:mm:ss'),
-    是否过期: isExpired
-  });
-  
   return isExpired;
 }
 
@@ -139,7 +132,6 @@ export const tokenMiddleware: P138Api.IMiddleware = {
         setAuthorizationHeader(request, newToken);
       }
     } else {
-      console.log('Token未过期，直接使用');
       setAuthorizationHeader(request, token);
     }
   },

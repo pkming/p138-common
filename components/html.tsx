@@ -1,17 +1,18 @@
-import React from 'react';
-import { Platform, View } from 'react-native';
-import WebView from 'react-native-webview';
+import React from "react";
+import { Platform, View } from "react-native";
+import WebView from "react-native-webview";
 
 interface HtmlProps {
   html: string;
   // style?: StyleProp<ViewStyle>;
+  imageUrl?: string;
 }
 
-export default function Html({ html }: HtmlProps) {
+export default function Html({ html, imageUrl }: HtmlProps) {
   if (!html) return null;
   return (
-    <View style={{ width: '100%', height: '100%' }}>
-      {Platform.OS === 'web' ? (
+    <View style={{ width: "100%", height: "100%" }}>
+      {Platform.OS === "web" ? (
         <iframe
           srcDoc={`
       <style>
@@ -27,14 +28,16 @@ export default function Html({ html }: HtmlProps) {
           img {
             width: 100%;
             height: 100%;
+            margin-top: 20px;
           }
       </style>
-      ${html?.replace('http://', 'https://')}
+      ${html?.replace("http://", "https://")}
+      ${imageUrl ? `<img src="${imageUrl}" />` : ""}
     `}
           style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
+            width: "100%",
+            height: "100%",
+            border: "none",
           }}
         />
       ) : (
@@ -61,9 +64,10 @@ export default function Html({ html }: HtmlProps) {
           }
         </style>
         ${html}
+        ${imageUrl ? `<img src="${imageUrl}" />` : ""}
       `,
           }}
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: "100%", height: "100%" }}
         />
       )}
     </View>

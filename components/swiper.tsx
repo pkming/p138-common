@@ -41,7 +41,7 @@ const CarouselComponent = (props: {
         router.push({
           pathname: item.redirectUrl || "/home/notice",
           params: {
-            item: JSON.stringify(item.adContent),
+            item: JSON.stringify(item),
           },
         });
         break;
@@ -51,7 +51,7 @@ const CarouselComponent = (props: {
         router.push({
           pathname: item.redirectUrl || "/home/notice",
           params: {
-            item: JSON.stringify(item.adContent),
+            item: JSON.stringify(item),
           },
         });
         break;

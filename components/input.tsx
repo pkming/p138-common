@@ -53,10 +53,12 @@ const ZTextInput: React.FC<CustomTextInputProps> = ({
       >
         <TextInput
           style={[
-            { flex: 1 },
+            { flex: 1 ,height:'100%'},
+            
             error && { borderColor: "#f53b57" }, // 如果有错误，则改变边框颜色
             textStyle,
           ]}
+          
           value={value}
           onChangeText={onChangeText}
           placeholderTextColor={"#ccc"}
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     position: "relative",
+    backgroundColor:'#fff'
   },
   input: {
     height: 40,
@@ -102,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     paddingHorizontal: 10,
     color: "#333",
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "#fff",
   },
   iconWrapper: {
     position: "absolute",

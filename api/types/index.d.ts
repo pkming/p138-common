@@ -33,6 +33,7 @@ declare namespace P138Api {
     timeout?: number;
     header?: Record<string, string>;
     isWeb?: boolean;
+    ignoreAuth?: boolean;
     storage: {
       getItem: (key: string) => Promise<string | null>;
       setItem: (key: string, value: string) => Promise<void>;
@@ -88,6 +89,7 @@ declare namespace P138Api {
     query?: TQuery;
     data?: TData;
     header?: THeader;
+    ignoreAuth?: boolean;
     skipErrorHandler?: boolean;
     skipTokenHandler?: boolean;
   }
@@ -107,6 +109,7 @@ declare namespace P138Api {
     error?: any;
     isRetry?: boolean;
     config: IBaseConfig;
+    ignoreAuth?: boolean;
   }
 
   /**

@@ -31,3 +31,13 @@ export const getImageUrl = (url: string) => {
   return url.replace('https://', 'http://');
 };
 
+
+const formatPrice = (price?: number|string) => {
+  if(typeof price === 'string'){
+   return parseFloat(price??'0').toFixed(2);
+  }
+  return (price??0).toFixed(2);
+};
+
+export { formatPrice };
+

@@ -55,7 +55,7 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
     async request<TResponse = any, TQuery = Record<string, any>, TData = Record<string, any>, THeader = Record<string, string>>(
       props: P138Api.IRequestProps<TQuery, TData, THeader>
     ): Promise<TResponse> {
-      const { method, url, query, data, skipErrorHandler, skipTokenHandler } = props;
+      const { method, url, query, data, skipErrorHandler, skipTokenHandler, ignoreAuth } = props;
       
       // 创建请求上下文
       const context: P138Api.IMiddlewareContext = {
@@ -70,6 +70,7 @@ export function createApiClient(config: P138Api.IBaseConfig): P138Api.IApiClient
         },
         config: {
           ...config,
+          ignoreAuth,
           storage: {
             getItem: async (key: string) => config.storage.getItem(key),
             setItem: async (key: string, value: string) => config.storage.setItem(key, value),

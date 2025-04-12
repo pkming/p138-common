@@ -6,21 +6,22 @@ import {
   Text,
   Dimensions,
   View,
+
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
-import {useNavigation} from '@react-navigation/native';
-import commonStyles from 'src/styles';
-import {themeRedColor} from 'src/styles/color';
+
+import { Image } from 'expo-image';
+import { router } from 'expo-router';
+import { themeRedColor } from 'p138-common/utils/styles/color';
 
 const {height} = Dimensions.get('window'); // 获取屏幕高度
 
 const FloatingButton: React.FC = () => {
-  const navigation = useNavigation(); // 获取 navigation 对象
   const panY = useRef(new Animated.Value((height * 3) / 4)).current; // 初始 Y 轴位置
   const currentY = useRef(0); // 用于记录当前的 Y 轴位置
   const isDragging = useRef(false); // 标记是否正在拖拽
   const startTime = useRef(0); // 手势开始时间
   const startY = useRef(0); // 手势开始时的 Y 轴位置
+  console.log(111111111111111)
 
   const panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true, // 启用手势响应
@@ -72,16 +73,23 @@ const FloatingButton: React.FC = () => {
 
   const handlePress = () => {
     // 处理点击事件
-    navigation.navigate('SingleChat'); // 跳转到目标页面
+    router.push('/chat'); // 跳转到目标页面
+    // navigation.navigate('SingleChat'); // 跳转到目标页面
   };
 
   return (
     <Animated.View
       style={[
         styles.floatingButton,
-        commonStyles.row,
-        commonStyles.center,
-        commonStyles.bgWhite,
+        {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#fff',
+          shadowColor: '#000',
+          shadowOffset: {width: 0, height: 2},
+          shadowOpacity: 0.3,
+        },
         // eslint-disable-next-line react-native/no-inline-styles
         {
           transform: [{translateY: panY}], // 动画样式
@@ -93,10 +101,13 @@ const FloatingButton: React.FC = () => {
       <View
         style={[
           styles.touchableContent,
-          commonStyles.row,
-          commonStyles.center,
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }
         ]}>
-        <FastImage
+        <Image
           source={require('src/asset/jpimgs/home/icon_message_float.png')}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{width: 25, height: 25}}
@@ -115,7 +126,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 70,
     height: 30,
-    backgroundColor: '#fff',
+    backgroundColor: '#e22',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -126,6 +137,7 @@ const styles = StyleSheet.create({
     elevation: 5, // 安卓阴影
     borderTopLeftRadius: 15,
     borderBottomLeftRadius: 15,
+    zIndex: 1000,
   },
   touchableContent: {
     flexDirection: 'row',

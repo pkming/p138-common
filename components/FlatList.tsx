@@ -150,7 +150,6 @@ export function FlatList<T>({
       onEndReached={handleLoadMore}
       onEndReachedThreshold={onEndReachedThreshold}
       contentContainerStyle={[
-        { padding: 10, gap: 10 },
         contentContainerStyle,
       ]}
       className={className}

@@ -12,6 +12,7 @@ interface TabSwitcherProps<T extends string | number> {
   onTabPress: (key: T) => void; // 回调，返回选中的 key
   style?: any;
   numbers?: number[];
+  className?: string;
 }
 
 const TabSwitcher = <T extends string | number>({
@@ -20,9 +21,10 @@ const TabSwitcher = <T extends string | number>({
   onTabPress,
   style,
   numbers,
+  className,
 }: TabSwitcherProps<T>): React.ReactElement => {
   return (
-    <View className={`flex-row bg-white ${style}`}>
+    <View className={`flex-row bg-white ${style} ${className}`}>
       {tabs.map((tab, index) => (
         <TouchableOpacity
           key={tab.key}
@@ -32,7 +34,7 @@ const TabSwitcher = <T extends string | number>({
         >
           <View className="flex-row items-center">
             <Text
-              className={`text-[16px] text-gray-800 ${
+              className={`text-[15px] text-gray-800 ${
                 activeTab === tab.key ? "text-red-500 font-bold" : ""
               }`}
             >

@@ -19,6 +19,13 @@ export const formattedWeek = (day: string) => {
   const weekDay = weekDays[formattedDate.day()]; // 获取星期几的数字，0-6
   return `星期${weekDay}`;
 };
+export const formattedWeekV2 = (day: string) => {
+  const weekDays = ['日', '一', '二', '三', '四', '五', '六'];
+
+  const formattedDate = dayjs(day);
+  const weekDay = weekDays[formattedDate.day()]; // 获取星期几的数字，0-6
+  return `周${weekDay}`;
+};
 
 export const formattedDate = (day: string, format: string = 'YYYY-MM-DD') => {
   return dayjs(day).format(format);

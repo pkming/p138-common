@@ -6,9 +6,10 @@ import {View, StyleSheet, Image} from 'react-native';
 type AvatarWithVIPProps = {
   avatar: string;
   vipIndex: number;
+  className?: string;
 };
 
-const AvatarWithVIP = ({avatar, vipIndex}: AvatarWithVIPProps) => {
+const AvatarWithVIP = ({avatar, vipIndex, className}: AvatarWithVIPProps) => {
   const vipIcon = [
     require('src/asset/jpimgs/mine/logo_lv0.png'),
     require('src/asset/jpimgs/mine/logo_lv1.png'),
@@ -23,7 +24,7 @@ const AvatarWithVIP = ({avatar, vipIndex}: AvatarWithVIPProps) => {
     require('src/asset/jpimgs/mine/logo_lv10.png'),
   ];
   return (
-    <View>
+    <View className={className}>
       <Image
         source={{uri: avatar}}
         style={styles.avatar}

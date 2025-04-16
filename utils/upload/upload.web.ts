@@ -1,6 +1,3 @@
-import axios from 'axios';
-import { env } from '@/config/env';
-import { message } from 'antd';
 
 interface UploadResponse {
   success: boolean;

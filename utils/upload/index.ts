@@ -1,179 +1,155 @@
-import axios from 'axios';
-import {env} from 'src/api/config';
 import {Platform} from 'react-native';
 import {ImagePickerAsset} from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
+import { Buffer } from 'buffer';
+import { getOssAuthInfo } from "src/api/interface/oss";
+import OSS from "ali-oss";
 
-interface UploadResponse {
-  success: boolean;
-  data?: {
-    data: string;
-    error: Object;
-    requestId: string;
-    success: boolean;
-  };
-  message?: string;
+interface CustomFile extends File {
+  uri?: string;
+  buffer?: Buffer;
 }
 
-/**
- * 将 URI 转换为适合上传的格式
- * @param file 图片 URI
- * @returns Promise<File | FormData>
- */
-export const uriToFile = async (file: ImagePickerAsset): Promise<File> => {
-  if (Platform.OS === 'web') {
-    // Web 平台：转换为 File 对象
-    const response = await fetch(file.uri);
-    const blob = await response.blob();
-    const timestamp = new Date().getTime();
-    const randomStr = Math.random().toString(36).substring(2, 8);
-    const filename =
-      file.fileName ||
-      `upload_${timestamp}_${randomStr}.${blob.type.split('/')[1]}`;
-    return new File([blob], filename, {type: blob.type});
-  } else {
-    // 移动端：创建 FormData 并添加文件
+// OSS 客户端单例
+class OssClient {
+  private static instance: OssClient | null = null;
+  private client: OSS | null = null;
+  private authInfo: any = null;
+  private lastAuthTime: number = 0;
+  private readonly AUTH_EXPIRE_TIME = 30 * 60 * 1000; // 30分钟
 
-    return Promise.resolve({
-      uri: file.uri,
-      name: file.fileName || `upload_${Date.now()}.jpg`,
-      type: file.mimeType || 'image/jpeg',
-    } as any);
-  }
-};
+  private constructor() {}
 
-/**
- * 文件上传方法
- * @param file 文件对象，可以是 File、FormData 或 URI 字符串
- * @param onProgress 上传进度回调
- * @returns Promise<UploadResponse>
- */
-export const uploadFile = async (
-  fileInfos?: ImagePickerAsset & {userId: string},
-  onProgress?: (progress: number) => void,
-): Promise<UploadResponse> => {
-  if (!fileInfos) {
-    Toast.show('文件信息不能为空');
-    return {
-      success: false,
-      message: '文件信息不能为空',
-    };
-  }
-  try {
-    const formData = new FormData();
-    const file = await uriToFile(fileInfos);
-    formData.append('file', file);
-    formData.append('userID', fileInfos.userId);
-
-    const uploadUrl = env.BASEURL + '/api/v1/upload';
-
-    if (Platform.OS === 'web') {
-      // Web 平台使用 axios
-      const response = await axios.post(uploadUrl, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Accept: 'application/json',
-        },
-        timeout: 30000,
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-        transformRequest: (data, headers) => {
-          delete headers['Content-Type'];
-          return data;
-        },
-        onUploadProgress: progressEvent => {
-          if (onProgress && progressEvent.total) {
-            const progress = (progressEvent.loaded / progressEvent.total) * 100;
-            onProgress(progress);
-          }
-        },
-      });
-
-      return {
-        success: true,
-        data: response.data,
-      };
-    } else {
-      // Android 平台使用 fetch
-      const response = await fetch(uploadUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      return {
-        success: true,
-        data: result,
-      };
+  static getInstance(): OssClient {
+    if (!this.instance) {
+      this.instance = new OssClient();
     }
-  } catch (error) {
-    console.error('文件上传失败:', {
-      error: error instanceof Error ? error.message : 'Unknown error',
-      stack: error instanceof Error ? error.stack : undefined,
-    });
-
-    return {
-      success: false,
-      message: error instanceof Error ? error.message : '文件上传失败',
-    };
-  }
-};
-
-/**
- * 图片上传方法
- * @param file 图片文件
- * @param onProgress 上传进度回调
- * @returns Promise<UploadResponse>
- */
-export const uploadImage = async (
-  file: File | string,
-  onProgress?: (progress: number) => void,
-): Promise<UploadResponse> => {
-  // 检查文件类型
-  if (typeof file !== 'string' && !file.type.startsWith('image/')) {
-    return {
-      success: false,
-      message: '请上传图片文件',
-    };
+    return this.instance;
   }
 
-  return uploadFile(file, onProgress);
-};
+  private async initClient(): Promise<OSS> {
+    // 检查是否需要重新获取授权
+    const now = Date.now();
+    if (!this.client || !this.authInfo || (now - this.lastAuthTime > this.AUTH_EXPIRE_TIME)) {
+      const res = await getOssAuthInfo({
+        ossVendor: "aliyun",
+      });
+      
+      if (!res.data) {
+        throw new Error("获取 OSS 授权信息失败");
+      }
 
-/**
- * 视频上传方法
- * @param file 视频文件
- * @param onProgress 上传进度回调
- * @returns Promise<UploadResponse>
- */
-export const uploadVideo = async (
-  file: File | string,
-  onProgress?: (progress: number) => void,
-): Promise<UploadResponse> => {
-  // 检查文件类型
-  if (typeof file !== 'string' && !file.type.startsWith('video/')) {
-    return {
-      success: false,
-      message: '请上传视频文件',
-    };
+      this.authInfo = res.data;
+      this.lastAuthTime = now;
+      
+      this.client = new OSS({
+        region: this.authInfo.region,
+        accessKeyId: this.authInfo.accessKeyID,
+        accessKeySecret: this.authInfo.accessKeySecret,
+        stsToken: this.authInfo.securityToken,
+        bucket: "liangzai-dev-p138",
+        secure: true,
+        timeout: 60000,
+        cname: false,
+      });
+    }
+
+    return this.client;
   }
 
-  return uploadFile(file, onProgress);
-};
+  private async uriToFile(file: ImagePickerAsset): Promise<CustomFile> {
+    if (Platform.OS === 'web') {
+      // Web 平台：转换为 File 对象
+      const response = await fetch(file.uri);
+      const blob = await response.blob();
+      const timestamp = new Date().getTime();
+      const randomStr = Math.random().toString(36).substring(2, 8);
+      const filename = file.fileName || `upload_${timestamp}_${randomStr}.${blob.type.split('/')[1]}`;
+      return new File([blob], filename, { type: blob.type }) as CustomFile;
+    } else {
+      // 移动端：使用 Expo FileSystem
+      const asset = file;
+      const uri = asset.uri;
+      const mimeType = asset.mimeType || 'application/octet-stream';
+      const ext = mimeType.split('/')[1] || 'jpg';
+      const filename = asset.fileName || `upload_${Date.now()}.${ext}`;
+      const base64 = await FileSystem.readAsStringAsync(uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const buffer = Buffer.from(base64, 'base64');
+      return {
+        uri,
+        name: filename,
+        type: mimeType,
+        lastModified: new Date().getTime(),
+        size: base64.length,
+        buffer,
+      } as CustomFile;
+    }
+  }
 
-/**
- * 多文件上传方法
- * @param files 文件数组
- * @param onProgress 上传进度回调
- * @returns Promise<UploadResponse[]>
- */
-export const uploadMultipleFiles = async (
-  files: (File | string)[],
-  onProgress?: (progress: number) => void,
-): Promise<UploadResponse[]> => {
-  const uploadPromises = files.map(file => uploadFile(file, onProgress));
-  return Promise.all(uploadPromises);
+  async upload(file: ImagePickerAsset, loginInfo: { userID: string }): Promise<string|null> {
+    const client = await this.initClient();
+    
+    const uploadPath = loginInfo?.userID + "/";
+    const fileName = uploadPath + (file.fileName || `upload_${Date.now()}.${file.mimeType?.split('/')[1] || 'jpg'}`);
+    const mimeType = file.mimeType || "application/octet-stream";
+
+    const options = {
+      headers: {
+        "Content-Type": mimeType,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, HEAD",
+      },
+    };
+
+    const fileObj = await this.uriToFile(file);
+    let result;
+
+    if (Platform.OS === "web") {
+      result = await client.put(fileName, fileObj, options);
+    } else {
+      if (!fileObj.buffer) {
+        throw new Error("文件转换失败");
+      
+      }
+      result = await client.put(fileName, fileObj.buffer, options);
+    }
+
+    if (!result.url) {
+      throw new Error("上传失败：未获取到文件URL");
+    }
+
+    return result?fileName:null;
+  }
+  /**从OSS获取图片Base64
+   * @param fileName 文件名
+   * @returns 图片Base64
+  */
+  async getImage(fileName: string): Promise<string> {
+    const client = await this.initClient();
+    const result = await client.get(fileName);
+    const base64 = result.content.toString("base64");
+    return `data:image/jpeg;base64,${base64}`;
+  }
+}
+
+// 导出单例实例
+export const ossClient = OssClient.getInstance();
+
+// 导出上传方法
+export const uploadToOss = async (
+  file: ImagePickerAsset,
+  loginInfo: { userID: string }
+): Promise<string> => {
+  return ossClient.upload(file, loginInfo);
+};
+export const getImageFromOss = async (
+  fileName: string,
+): Promise<string> => {
+  return ossClient.getImage(fileName);
+};
+export default {
+  uploadToOss,
+  getImageFromOss
 };

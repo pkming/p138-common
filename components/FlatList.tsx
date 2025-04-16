@@ -117,7 +117,7 @@ export function FlatList<T>({
     return (
       <View
         className="items-center justify-center"
-        style={{ height: kScreenHeight * 0.7 }}
+        style={{ height: '100%' }}
       >
         <Image
           source={emptyImage}

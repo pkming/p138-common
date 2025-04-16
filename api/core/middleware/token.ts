@@ -20,6 +20,7 @@ const tokenState = {
  */
 function executeLogout(config: P138Api.IBaseConfig) {
   if (!tokenState.isLoggingOut) {
+    console.log('执行登出');
     tokenState.isLoggingOut = true;
     config.logout();
   }
@@ -63,6 +64,7 @@ async function refreshToken(config: P138Api.IBaseConfig): Promise<boolean> {
       executeLogout(config);
       return false;
     } catch (error) {
+      tokenState.isLoggingOut = false;
       console.error('Token刷新失败:', error);
       executeLogout(config);
       return false;
@@ -123,7 +125,8 @@ export const tokenMiddleware: P138Api.IMiddleware = {
       const refreshSuccess = await refreshToken(config);
       
       if (!refreshSuccess) {
-        console.log('Token刷新失败，执行登出');
+        console.log('Token刷新失败，执行登出1');
+        executeLogout(config);
         return;
       }
 
@@ -152,7 +155,8 @@ export const tokenMiddleware: P138Api.IMiddleware = {
     if(context.error.response?.status === 401){
       const refreshSuccess = await refreshToken(context.config);
       if (!refreshSuccess) {
-        console.log('Token刷新失败，执行登出');
+        console.log('Token刷新失败，执行登出2');
+        tokenState.isLoggingOut = false;
         executeLogout(context.config);
         return;
       }else{

@@ -10,12 +10,12 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import CustomModal from "p138-common/components/modal";
-import { kScreenWidth } from "src/utils";
-import { useUserStore } from "src/store";
-import { userUpdateBasicInfoApi } from "src/api/interface/auth";
 import { getImageFromOss, uploadToOss } from "p138-common/utils/upload";
 import OSSImage from "./OSSImage";
 import { ImageProps, ImageStyle, Image } from "expo-image";
+import { userUpdateBasicInfoApi } from "src/api/interface/users-auth";
+import { useUserStore } from "src/store";
+import { kScreenWidth } from "@/p138-common/utils/fuc/fc.rn";
 
 interface ImageUploadItemProps {
   label?: string; // 上传项的标题

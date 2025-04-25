@@ -6,11 +6,11 @@
 export const URL_CONFIG = {
   //本地环境
   Local_Client_API: 'http://192.168.31.249:8888',
-  Local_Client_H5: 'http://192.168.31.44:8081',
+  Local_Client_H5: 'http://192.168.31.72:8081',
   Local_Business_API: 'http://192.168.31.249:8889',
-  Local_Business_H5: 'http://192.168.31.44:8082',
+  Local_Business_H5: 'http://192.168.31.72:8082',
   Local_Admin_API: 'http://192.168.31.249:8887',
-  Local_Admin_H5: 'http://192.168.31.44:8000',
+  Local_Admin_H5: 'http://192.168.31.72:8000',
   Local_Oss_API: 'https://liangzai-dev-p138.oss-cn-hongkong.aliyuncs.com',
 
   //测试环境
